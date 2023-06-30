@@ -10,6 +10,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import SavedScreen from "./screens/SavedScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SearchScreen from "./screens/SearchScreen";
 
 const StackNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -91,6 +92,11 @@ const StackNavigation = () => {
         <Stack.Screen
           name="Main"
           component={BottomTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Search"
+          component={SearchScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
