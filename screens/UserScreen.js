@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { ScrollView } from "react-native";
 
 const UserScreen = () => {
   const navigation = useNavigation();
@@ -32,6 +33,7 @@ const UserScreen = () => {
         borderBottomColor: "transparent",
         shadowColor: "transparent",
       },
+      headerTintColor: "white",
     });
   }, []);
 
@@ -43,10 +45,9 @@ const UserScreen = () => {
         [
           {
             text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
             style: "cancel",
           },
-          { text: "OK", onPress: () => console.log("OK Pressed") },
+          { text: "OK" },
         ],
         { cancelable: false }
       );
@@ -59,14 +60,14 @@ const UserScreen = () => {
         children: route.params.children,
         adults: route.params.adults,
         rating: route.params.rating,
-        startDate: route.params.startDate,
-        endDate: route.params.endDate,
+        selectedStartDate: route.params.selectedStartDate,
+        selectedEndDate: route.params.selectedEndDate,
       });
     }
   };
   return (
     <>
-      <View style={{ padding: 20 }}>
+      <ScrollView style={{ padding: 20 }}>
         <View style={{ flexDirection: "column", gap: 10 }}>
           <Text>First Name</Text>
           <TextInput
@@ -88,6 +89,7 @@ const UserScreen = () => {
         <View style={{ flexDirection: "column", gap: 10, marginTop: 10 }}>
           <Text>Email</Text>
           <TextInput
+            keyboardType="email-address"
             value={email}
             onChangeText={(text) => setEmail(text)}
             style={{ padding: 10, borderColor: "gray", borderWidth: 1 }}
@@ -97,12 +99,13 @@ const UserScreen = () => {
         <View style={{ flexDirection: "column", gap: 10, marginTop: 10 }}>
           <Text>Phone no</Text>
           <TextInput
+            keyboardType="phone-pad"
             value={phoneNo}
             onChangeText={(text) => setPhoneNo(text)}
             style={{ padding: 10, borderColor: "gray", borderWidth: 1 }}
           />
         </View>
-      </View>
+      </ScrollView>
 
       <Pressable
         style={{

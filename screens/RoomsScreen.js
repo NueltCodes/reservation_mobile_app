@@ -143,8 +143,8 @@ const RoomsScreen = () => {
               children: route.params.children,
               adults: route.params.adults,
               rating: route.params.rating,
-              startDate: route.params.startDate,
-              endDate: route.params.endDate,
+              selectedStartDate: route.params.selectedStartDate,
+              selectedEndtDate: route.params.selectedEndtDate,
             })
           }
           style={{
