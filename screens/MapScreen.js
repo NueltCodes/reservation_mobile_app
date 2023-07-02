@@ -8,14 +8,14 @@ const MapScreen = () => {
   const mapView = useRef(null);
   console.log(route.params);
   const coordinates = [];
-  const details = route.params.searchResults.map((item) =>
-    item.properties?.map((prop) => {
-      coordinates.push({
-        latitude: Number(prop.latitude),
-        longitude: Number(prop.longitude),
-      });
-    })
-  );
+  //   const details = route.params.searchResults.map((item) =>
+  //     item.properties?.map((prop) => {
+  //       coordinates.push({
+  //         latitude: Number(prop.latitude),
+  //         longitude: Number(prop.longitude),
+  //       });
+  //     })
+  //   );
   useEffect(() => {
     mapView.current.fitToCoordinates(coordinates, {
       edgePadding: {
@@ -30,8 +30,9 @@ const MapScreen = () => {
     <View>
       <MapView ref={mapView} style={{ width: "100%", height: "100%" }}>
         {route.params.searchResults.map((item) =>
-          item.properties.map((property) => (
+          item.properties.map((property, index) => (
             <Marker
+              key={index}
               title={property.name}
               coordinate={{
                 latitude: Number(property.latitude),

@@ -12,11 +12,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const PropertyCard = ({
+  placeName,
   rooms,
   children,
   property,
   adults,
   selectedStartDate,
+  selectedEndDate,
   availableRooms,
 }) => {
   const { width, height } = Dimensions.get("window");
@@ -26,16 +28,18 @@ const PropertyCard = ({
       <Pressable
         onPress={() =>
           navigation.navigate("Info", {
+            placeName: placeName,
             name: property.name,
             rating: property.rating,
             oldPrice: property.oldPrice,
             newPrice: property.newPrice,
             photos: property.photos,
-            availableRooms: property.rooms,
+            availableRooms: availableRooms,
             adults: adults,
             children: children,
             rooms: rooms,
             selectedStartDate: selectedStartDate,
+            selectedEndDate: selectedEndDate,
           })
         }
         style={{ margin: 15, flexDirection: "row", backgroundColor: "white" }}

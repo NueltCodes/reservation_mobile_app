@@ -65,7 +65,7 @@ const PlacesScreen = () => {
   };
 
   const searchPlaces = data?.filter(
-    (item) => item.place === route.params.place
+    (item) => item.place === route.params?.place
   );
 
   const applyFilter = (filter) => {
@@ -142,15 +142,17 @@ const PlacesScreen = () => {
       ) : (
         <ScrollView style={{ backgroundColor: "#F5F5F5", marginBottom: 50 }}>
           {sortedData
-            ?.filter((item) => item.place === route.params.place)
+            ?.filter((item) => item.place === route.params.placeName)
             .map((item) =>
               item.properties.map((property, index) => (
                 <PropertyCard
                   key={index}
+                  placeName={route.params.placeName}
                   rooms={route.params.rooms}
                   children={route.params.children}
                   adults={route.params.adults}
                   selectedStartDate={route.params.selectedStartDate}
+                  selectedEndDate={route.params.selectedEndDate}
                   property={property}
                   availableRooms={property.rooms}
                 />

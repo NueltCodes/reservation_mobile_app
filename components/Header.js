@@ -9,6 +9,7 @@ const Header = () => {
       <View style={{ paddingHorizontal: 10 }}>
         <ScrollView
           horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             backgroundColor: "#003580",
             flexDirection: "row",

@@ -48,6 +48,7 @@ const SearchScreen = () => {
           value={input}
           onChangeText={(text) => setInput(text)}
           placeholder="Enter Your Destination"
+          style={{ width: "80%" }}
         />
         <Feather name="search" size={22} color="black" />
       </View>

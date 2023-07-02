@@ -90,7 +90,7 @@ const HomeScreen = () => {
   }, []);
 
   const searchPlaces = (place) => {
-    if (!route.params || !selectedStartDate) {
+    if (!route.params || !selectedStartDate || !selectedEndDate) {
       Alert.alert(
         "Incomplete Details",
         "Please enter all the details",
@@ -106,7 +106,7 @@ const HomeScreen = () => {
       );
     }
 
-    if (route.params && selectedStartDate) {
+    if (route.params && selectedStartDate && selectedEndDate) {
       navigation.navigate("Places", {
         rooms: rooms,
         adults: adults,
@@ -114,6 +114,7 @@ const HomeScreen = () => {
         selectedStartDate: selectedStartDate,
         selectedEndDate: selectedEndDate,
         place: place,
+        placeName: place,
       });
     }
   };
@@ -145,12 +146,11 @@ const HomeScreen = () => {
             }}
           >
             <Feather name="search" size={24} color="black" />
-            <TextInput
-              placeholderTextColor="black"
-              placeholder={
-                route?.params ? route.params?.input : "Enter Your Destination"
-              }
-            />
+            <Text>
+              {route?.params
+                ? route.params?.input || route.params.placeName
+                : "Enter Your Destination"}
+            </Text>
           </Pressable>
 
           {/*  Date select View */}
@@ -229,7 +229,7 @@ const HomeScreen = () => {
 
                 <TouchableOpacity onPress={handleOnPressStartDate}>
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Close
+                    Select
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -263,7 +263,7 @@ const HomeScreen = () => {
 
                 <TouchableOpacity onPress={handleOnPressEndDate}>
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Close
+                    Select
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -284,15 +284,16 @@ const HomeScreen = () => {
             }}
           >
             <Ionicons name="person-outline" size={24} color="black" />
-            <TextInput
-              placeholderTextColor="red"
-              placeholder={` ${rooms} room • ${adults} adults • ${children} Children`}
-            />
+            <Text style={{ color: "red" }}>
+              {` ${rooms} room • ${adults} adults • ${children} Children`}
+            </Text>
           </TouchableOpacity>
 
           {/*  Search View */}
           <Pressable
-            onPress={() => searchPlaces(route?.params?.input)}
+            onPress={() =>
+              searchPlaces(route?.params?.input || route.params.placeName)
+            }
             style={{
               paddingHorizontal: 10,
               borderColor: "#FFC72C",
@@ -407,7 +408,8 @@ const HomeScreen = () => {
           <Image
             style={{ width: 200, height: 50, resizeMode: "cover" }}
             source={{
-              uri: "https://assets.stickpng.com/thumbs/5a32a821cb9a85480a628f8f.png",
+              uri:
+                "https://assets.stickpng.com/thumbs/5a32a821cb9a85480a628f8f.png",
             }}
           />
         </Pressable>
@@ -424,8 +426,7 @@ const HomeScreen = () => {
               text="Apply"
               style={{
                 marginBottom: 20,
-                color: "white",
-                backgroundColor: "#003580",
+                backgroundColor: "white",
               }}
               onPress={() => setModalVisibile(!modalVisibile)}
             />
