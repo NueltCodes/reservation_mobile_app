@@ -1,16 +1,45 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import SearchResult from "../components/SearchResult";
 import { Data } from "../Places";
 import { useNavigation } from "@react-navigation/native";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 const SearchScreen = () => {
   const [input, setInput] = useState("");
   const data = Data;
   const navigation = useNavigation();
+  const [items, setItems] = useState([]);
 
+  useEffect(() => {
+    if (items.length > 0) return;
+
+    const fetchProducts = async () => {
+      const colRef = collection(db, "places");
+
+      const docsSnap = await getDocs(colRef);
+      docsSnap.forEach((doc) => {
+        items.push(doc.data());
+      });
+    };
+
+    fetchProducts();
+  }, [items]);
+  // console.log(items);
+
+  // console.log(items.place);
+  // console.log(
+  //   items.map((item) => (
+  //     <>
+  //       {item.properties.map((prop) => (
+  //         <div key={prop.id}>{prop.name}</div>
+  //       ))}
+  //     </>
+  //   ))
+  // );
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -53,7 +82,7 @@ const SearchScreen = () => {
         <Feather name="search" size={22} color="black" />
       </View>
 
-      <SearchResult data={data} input={input} setInput={setInput} />
+      <SearchResult data={items} input={input} setInput={setInput} />
     </SafeAreaView>
   );
 };

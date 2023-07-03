@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Octicons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,15 +15,17 @@ import {
   ModalTitle,
   SlideAnimation,
 } from "react-native-modals";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 const PlacesScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const data = Data;
+  // const data = Data;
   const [loading, setLoading] = useState(false);
   const [modalVisibile, setModalVisibile] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState([]);
-  const [sortedData, setSortedData] = useState(data);
+  const [items, setItems] = useState([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,6 +45,26 @@ const PlacesScreen = () => {
       headerTintColor: "white",
     });
   }, []);
+
+  useEffect(() => {
+    if (items.length > 0) return;
+
+    setLoading(true);
+
+    const fetchProducts = async () => {
+      const colRef = collection(db, "places");
+      const docsSnap = await getDocs(colRef);
+      docsSnap.forEach((doc) => {
+        items.push(doc.data());
+      });
+      setLoading(false);
+    };
+    fetchProducts();
+  }, [items]);
+
+  const [sortedData, setSortedData] = useState(items);
+
+  console.log(sortedData);
 
   const compare = (a, b) => {
     if (a.newPrice > b.newPrice) {
@@ -64,7 +86,7 @@ const PlacesScreen = () => {
     return 0;
   };
 
-  const searchPlaces = data?.filter(
+  const searchPlaces = items?.filter(
     (item) => item.place === route.params?.place
   );
 
@@ -142,7 +164,7 @@ const PlacesScreen = () => {
       ) : (
         <ScrollView style={{ backgroundColor: "#F5F5F5", marginBottom: 50 }}>
           {sortedData
-            ?.filter((item) => item.place === route.params.placeName)
+            ?.filter((item) => item.place === route.params.place)
             .map((item) =>
               item.properties.map((property, index) => (
                 <PropertyCard
