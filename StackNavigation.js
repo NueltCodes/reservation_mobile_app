@@ -112,6 +112,7 @@ const StackNavigation = () => {
           component={BottomTabs}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
           name="Search"
           component={SearchScreen}
