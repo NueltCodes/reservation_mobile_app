@@ -86,7 +86,7 @@ const PlacesScreen = () => {
     return 0;
   };
 
-  const searchPlaces = items?.filter(
+  const searchPlaces = sortedData?.filter(
     (item) => item.place === route.params?.place
   );
 
@@ -166,9 +166,9 @@ const PlacesScreen = () => {
           {sortedData
             ?.filter((item) => item.place === route.params.place)
             .map((item) =>
-              item.properties.map((property, index) => (
+              item.properties.map((property, id) => (
                 <PropertyCard
-                  key={index}
+                  key={id}
                   placeName={route.params.placeName}
                   rooms={route.params.rooms}
                   children={route.params.children}

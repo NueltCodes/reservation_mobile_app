@@ -71,7 +71,9 @@ const RoomsScreen = () => {
               >
                 {route.params.oldPrice}
               </Text>
-              <Text style={{ fontSize: 18 }}>Rs{route.params.newPrice}</Text>
+              <Text style={{ fontSize: 18 }}>
+                ${route.params.newPrice} per night
+              </Text>
             </View>
             <Amenities />
 
@@ -144,7 +146,7 @@ const RoomsScreen = () => {
               adults: route.params.adults,
               rating: route.params.rating,
               selectedStartDate: route.params.selectedStartDate,
-              selectedEndtDate: route.params.selectedEndtDate,
+              selectedEndDate: route.params.selectedEndDate,
             })
           }
           style={{

@@ -59,6 +59,8 @@ const SearchScreen = () => {
     });
   }, []);
 
+  console.log(items);
+
   return (
     <SafeAreaView>
       <View

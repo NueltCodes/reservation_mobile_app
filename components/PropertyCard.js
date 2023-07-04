@@ -47,18 +47,18 @@ const PropertyCard = ({
         <View>
           <Image
             style={{ height: height / 4, width: width - 240 }}
-            source={{ uri: property.image }}
+            source={{ uri: property?.image }}
           />
         </View>
 
         <View style={{ padding: 10 }}>
           <View style={styles.propertyName}>
-            <Text style={{ width: 165 }}>{property.name}</Text>
+            <Text style={{ width: 165 }}>{property?.name}</Text>
             <AntDesign name="hearto" size={24} color="red" />
           </View>
           <View style={styles.propertyRatings}>
             <MaterialIcons name="stars" size={24} color="green" />
-            <Text>{property.rating}</Text>
+            <Text>{property?.rating}</Text>
             <View
               style={{
                 backgroundColor: "#6CB4EE",
@@ -83,9 +83,9 @@ const PropertyCard = ({
               fontWeight: "bold",
             }}
           >
-            {property.address.length > 50
-              ? property.address.substr(0, 50) + "..."
-              : property.address}
+            {property?.address?.length > 50
+              ? property?.address.substr(0, 50) + "..."
+              : property?.address}
           </Text>
 
           <Text style={{ marginTop: 4, fontSize: 15, fontWeight: "500" }}>
@@ -106,9 +106,11 @@ const PropertyCard = ({
                 textDecorationLine: "line-through",
               }}
             >
-              {property.oldPrice * rooms}
+              {property?.oldPrice * rooms}
             </Text>
-            <Text style={{ fontSize: 18 }}>Rs {property.newPrice * rooms}</Text>
+            <Text style={{ fontSize: 18 }}>
+              Rs {property?.newPrice * rooms}
+            </Text>
           </View>
 
           <View style={{ marginTop: 6 }}>
