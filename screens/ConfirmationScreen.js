@@ -5,7 +5,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { savedPlaces } from "../SavedReducer";
 import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 
 const ConfirmationScreen = () => {
   const route = useRoute();
@@ -13,20 +19,23 @@ const ConfirmationScreen = () => {
 
   const dispatch = useDispatch();
   const uid = auth.currentUser.uid;
+
   const confirmBooking = async () => {
     dispatch(savedPlaces(route.params));
 
-    await setDoc(
-      doc(db, "users", `${uid}`),
-      {
-        bookingDetails: { ...route.params },
-      },
-      {
-        merge: true,
-      }
-    );
+    try {
+      const bookingsCollectionRef = collection(db, "users", uid, "bookings");
+      const bookingData = {
+        ...route.params,
+        timestamp: serverTimestamp(),
+      };
 
-    navigation.navigate("Main");
+      await addDoc(bookingsCollectionRef, bookingData);
+
+      navigation.navigate("Main");
+    } catch (error) {
+      console.error("Error creating booking:", error);
+    }
   };
 
   useLayoutEffect(() => {
@@ -89,7 +98,7 @@ const ConfirmationScreen = () => {
                     fontSize: 15,
                   }}
                 >
-                  Genius Level
+                  Guest friendly
                 </Text>
               </View>
             </View>
@@ -97,14 +106,17 @@ const ConfirmationScreen = () => {
 
           <View
             style={{
-              backgroundColor: "#17B169",
+              backgroundColor: "#0B3A2C",
               paddingHorizontal: 6,
               paddingVertical: 4,
               borderRadius: 6,
+              marginTop: 10,
+              width: 100,
+              alignItems: "center",
             }}
           >
             <Text style={{ color: "white", fontSize: 13 }}>
-              Travel sustainable
+              type: {route.params.category}
             </Text>
           </View>
         </View>
@@ -143,8 +155,8 @@ const ConfirmationScreen = () => {
           <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
             Rooms and Guests
           </Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#007FFF" }}>
-            {route.params.rooms} rooms {route.params.adults} adults{" "}
+          <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
+            {route.params.room} room • {route.params.adults} adults •{" "}
             {route.params.children} children
           </Text>
         </View>

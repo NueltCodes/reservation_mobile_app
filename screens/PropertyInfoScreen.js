@@ -86,7 +86,8 @@ const PropertyInfoScreen = () => {
                 <Text>{route.params.rating}</Text>
                 <View
                   style={{
-                    backgroundColor: "#003580",
+                    backgroundColor: "white",
+                    elevation: 3,
                     paddingVertical: 3,
                     borderRadius: 5,
                     width: 100,
@@ -95,28 +96,28 @@ const PropertyInfoScreen = () => {
                   <Text
                     style={{
                       textAlign: "center",
-                      color: "white",
+                      color: "black",
                       fontSize: 15,
                     }}
                   >
-                    Genius Level
+                    Guest friendly
                   </Text>
                 </View>
               </View>
             </View>
             <View
               style={{
-                backgroundColor: "#17B169",
+                backgroundColor: "#0B3A2C",
                 paddingHorizontal: 6,
                 paddingVertical: 4,
                 borderRadius: 6,
                 marginTop: 10,
-                width: 150,
+                width: 100,
                 alignItems: "center",
               }}
             >
               <Text style={{ color: "white", fontSize: 13 }}>
-                Travel sustainable
+                type: {route.params.category}
               </Text>
             </View>
           </View>
@@ -137,7 +138,7 @@ const PropertyInfoScreen = () => {
               marginHorizontal: 12,
             }}
           >
-            Price for 1 Night and {route.params.adults} adults
+            Price for 1 Night and {route.params.rooms} room
           </Text>
           <View
             style={{
@@ -155,17 +156,17 @@ const PropertyInfoScreen = () => {
                 textDecorationLine: "line-through",
               }}
             >
-              {route.params.oldPrice * route.params.adults}
+              {route.params.oldPrice * route.params.rooms}
             </Text>
             <Text style={{ fontSize: 20 }}>
-              Rs {route.params.newPrice * route.params.adults}
+              Rs {route.params.newPrice * route.params.rooms}
             </Text>
           </View>
           <View
             style={{
               marginHorizontal: 12,
               marginTop: 7,
-              backgroundColor: "green",
+              backgroundColor: "#0B3A2C",
               paddingHorizontal: 4,
               paddingVertical: 5,
               width: 78,
@@ -199,6 +200,9 @@ const PropertyInfoScreen = () => {
             </Text>
             <Pressable
               style={{
+                width: "100%",
+                backgroundColor: "white",
+                elevation: 3,
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 10,
@@ -226,10 +230,10 @@ const PropertyInfoScreen = () => {
               margin: 12,
               flexDirection: "row",
               alignItems: "center",
-              gap: 60,
+              gap: 20,
             }}
           >
-            <View>
+            <View style={{ flexDirection: "row", gap: 5 }}>
               <Text
                 style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}
               >
@@ -242,7 +246,7 @@ const PropertyInfoScreen = () => {
               </Text>
             </View>
 
-            <View>
+            <View style={{ flexDirection: "row", gap: 5 }}>
               <Text
                 style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}
               >
@@ -259,10 +263,8 @@ const PropertyInfoScreen = () => {
             <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
               Rooms and Guests
             </Text>
-            <Text
-              style={{ fontSize: 16, fontWeight: "bold", color: "#007FFF" }}
-            >
-              {route.params.rooms} rooms {route.params.adults} adults{" "}
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
+              {route.params.rooms} rooms • {route.params.adults} adults •{" "}
               {route.params.children} children
             </Text>
           </View>
@@ -294,10 +296,12 @@ const PropertyInfoScreen = () => {
             rooms: route.params.availableRooms,
             oldPrice: route.params.oldPrice,
             newPrice: route.params.newPrice,
+            room: route.params.rooms,
             name: route.params.name,
             children: route.params.children,
             adults: route.params.adults,
             rating: route.params.rating,
+            category: route.params.category,
             selectedStartDate: route.params.selectedStartDate,
             selectedEndDate: route.params.selectedEndDate,
           })

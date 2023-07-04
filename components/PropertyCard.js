@@ -33,6 +33,7 @@ const PropertyCard = ({
             rating: property.rating,
             oldPrice: property.oldPrice,
             newPrice: property.newPrice,
+            category: property.category,
             photos: property.photos,
             availableRooms: availableRooms,
             adults: adults,

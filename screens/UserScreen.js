@@ -57,6 +57,8 @@ const UserScreen = () => {
         oldPrice: route.params.oldPrice,
         newPrice: route.params.newPrice,
         name: route.params.name,
+        room: route.params.room,
+        category: route.params.category,
         children: route.params.children,
         adults: route.params.adults,
         rating: route.params.rating,

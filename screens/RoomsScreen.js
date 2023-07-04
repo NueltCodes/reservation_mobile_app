@@ -144,6 +144,8 @@ const RoomsScreen = () => {
               name: route.params.name,
               children: route.params.children,
               adults: route.params.adults,
+              room: route.params.room,
+              category: route.params.category,
               rating: route.params.rating,
               selectedStartDate: route.params.selectedStartDate,
               selectedEndDate: route.params.selectedEndDate,

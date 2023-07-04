@@ -2,6 +2,9 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Header = () => {
   return (
@@ -48,7 +51,7 @@ const Header = () => {
               marginRight: 20,
             }}
           >
-            <Ionicons name="ios-airplane-outline" size={20} color="white" />
+            <Fontisto name="island" size={24} color="white" />
             <Text
               style={{
                 marginLeft: 8,
@@ -57,7 +60,7 @@ const Header = () => {
                 fontSize: 15,
               }}
             >
-              Flights
+              Island
             </Text>
           </Pressable>
 
@@ -68,7 +71,7 @@ const Header = () => {
               marginRight: 20,
             }}
           >
-            <Ionicons name="car-outline" size={20} color="white" />
+            <FontAwesome name="diamond" size={19} color="white" />
             <Text
               style={{
                 marginLeft: 8,
@@ -77,7 +80,7 @@ const Header = () => {
                 fontSize: 15,
               }}
             >
-              Car Rental
+              Luxury
             </Text>
           </Pressable>
 
@@ -88,7 +91,7 @@ const Header = () => {
               marginRight: 20,
             }}
           >
-            <FontAwesome5 name="uber" size={20} color="white" />
+            <MaterialCommunityIcons name="campfire" size={22} color="white" />
             <Text
               style={{
                 marginLeft: 8,
@@ -97,7 +100,31 @@ const Header = () => {
                 fontSize: 15,
               }}
             >
-              Taxi
+              Camp Homes
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginRight: 20,
+            }}
+          >
+            <MaterialCommunityIcons
+              name="home-analytics"
+              size={22}
+              color="white"
+            />
+            <Text
+              style={{
+                marginLeft: 8,
+                fontWeight: "bold",
+                color: "white",
+                fontSize: 15,
+              }}
+            >
+              Modern
             </Text>
           </Pressable>
         </ScrollView>
