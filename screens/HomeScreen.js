@@ -34,6 +34,7 @@ const HomeScreen = () => {
   const [rooms, setRooms] = useState(1);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
+  const [active, setActive] = useState(1);
   const [modalVisibile, setModalVisibile] = useState(false);
   const route = useRoute();
   const today = new Date();
@@ -122,7 +123,7 @@ const HomeScreen = () => {
   return (
     <>
       {/* <View> */}
-      <Header />
+      <Header active={active} />
 
       <ScrollView vertical showsVerticalScrollIndicator={false}>
         <View

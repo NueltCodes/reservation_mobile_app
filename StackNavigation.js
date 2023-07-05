@@ -19,6 +19,7 @@ import UserScreen from "./screens/UserScreen";
 import ConfirmationScreen from "./screens/ConfirmationScreen";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
+import IslandScreen from "./screens/IslandScreen";
 
 const StackNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -110,6 +111,11 @@ const StackNavigation = () => {
         <Stack.Screen
           name="Main"
           component={BottomTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Island"
+          component={IslandScreen}
           options={{ headerShown: false }}
         />
 
