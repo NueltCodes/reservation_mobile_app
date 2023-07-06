@@ -3,24 +3,31 @@ import React from "react";
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Card = ({ property }) => {
-  console.log(property.photos);
+  const navigation = useNavigation();
+
   return (
-    <View>
-      {property.photos &&
-        Array.isArray(property.photos) &&
-        property.photos.length > 0 && (
-          <Image
-            source={{ uri: property.photos[0].image }} // Access the first image using property.photos[0].image
-            style={{
-              width: "100%",
-              height: 300,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-            }}
-          />
-        )}
+    <Pressable
+      onPress={() =>
+        navigation.navigate("ListingInfo", {
+          property: property,
+        })
+      }
+    >
+      {property.photos && property.photos.length > 0 && (
+        <Image
+          source={{ uri: property.photos[0] }} // Access the first image using property.photos[0]
+          style={{
+            width: "100%",
+            height: 300,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          }}
+        />
+      )}
       <View
         style={{
           backgroundColor: "white",
@@ -39,7 +46,7 @@ const Card = ({ property }) => {
               key={i}
               name="star-sharp"
               size={18}
-              color="#003580"
+              color="#FFC72C"
               style={styles.starIcon}
             />
           ))}
@@ -47,7 +54,7 @@ const Card = ({ property }) => {
             <Ionicons
               name="star-half-sharp"
               size={18}
-              color="#003580"
+              color="#FFC72C"
               style={styles.starIcon}
             />
           )}
@@ -86,7 +93,7 @@ const Card = ({ property }) => {
               width: 250,
             }}
           >
-            {property.location}
+            {property.address}
           </Text>
         </View>
         <View
@@ -110,7 +117,7 @@ const Card = ({ property }) => {
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

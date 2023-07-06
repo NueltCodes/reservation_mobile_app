@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,8 +7,13 @@ import { useNavigation } from "@react-navigation/native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import Card from "../components/Card";
+import Lottie from "lottie-react-native";
+import loadingAnimation from "../assets/loading-animation.json";
+import Loader2 from "../assets/loading2.json";
 
 const IslandScreen = () => {
+  const animationRef = useRef < Lottie > null;
+
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -47,7 +52,7 @@ const IslandScreen = () => {
     setLoading(true);
 
     const fetchProducts = async () => {
-      const colRef = collection(db, "Island");
+      const colRef = collection(db, "Listings");
       const docsSnap = await getDocs(colRef);
       docsSnap.forEach((doc) => {
         items.push(doc.data());
@@ -65,11 +70,16 @@ const IslandScreen = () => {
       <ScrollView vertical showsVerticalScrollIndicator={false}>
         <View
           style={{
-            margin: 20,
+            margin: loading ? 0 : 20,
+            flex: loading ? 1 : undefined,
+            justifyContent: loading ? "center" : undefined,
+            alignItems: loading ? "center" : undefined,
           }}
         >
           {loading ? (
-            <Text>Fetching places....</Text>
+            <>
+              <Lottie source={Loader2} autoPlay loop style={styles.animation} />
+            </>
           ) : (
             <View
               style={{
@@ -92,4 +102,10 @@ const IslandScreen = () => {
 
 export default IslandScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  animation: {
+    width: "100%",
+    height: 300,
+    marginTop: 50,
+  },
+});

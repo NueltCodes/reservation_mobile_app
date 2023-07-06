@@ -20,6 +20,7 @@ import ConfirmationScreen from "./screens/ConfirmationScreen";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 import IslandScreen from "./screens/IslandScreen";
+import ListingInfo from "./screens/ListingInfo";
 
 const StackNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -131,6 +132,7 @@ const StackNavigation = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Info" component={PropertyInfoScreen} />
+        <Stack.Screen name="ListingInfo" component={ListingInfo} />
         <Stack.Screen name="Rooms" component={RoomsScreen} />
         <Stack.Screen name="User" component={UserScreen} />
         <Stack.Screen name="Confirmation" component={ConfirmationScreen} />

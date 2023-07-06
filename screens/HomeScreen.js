@@ -342,7 +342,7 @@ const HomeScreen = () => {
               Genius
             </Text>
             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
-              You are ate genius level one in our loyalty program
+              You are at genius level one in our loyalty program
             </Text>
           </Pressable>
 
@@ -406,13 +406,17 @@ const HomeScreen = () => {
             alignItems: "center",
           }}
         >
-          <Image
-            style={{ width: 200, height: 50, resizeMode: "cover" }}
-            source={{
-              uri:
-                "https://assets.stickpng.com/thumbs/5a32a821cb9a85480a628f8f.png",
+          <Text
+            style={{
+              fontSize: 36,
+              fontWeight: "900",
+              color: "#003580",
+              paddingTop: 40,
+              paddingBottom: 50,
             }}
-          />
+          >
+            Reservation.com
+          </Text>
         </Pressable>
       </ScrollView>
       {/* </View> */}
