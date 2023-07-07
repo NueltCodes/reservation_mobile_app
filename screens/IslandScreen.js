@@ -8,12 +8,9 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import Card from "../components/Card";
 import Lottie from "lottie-react-native";
-import loadingAnimation from "../assets/loading-animation.json";
 import Loader2 from "../assets/loading2.json";
 
 const IslandScreen = () => {
-  const animationRef = useRef < Lottie > null;
-
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);

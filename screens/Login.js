@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -15,14 +16,26 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import Loader2 from "../assets/loading2.json";
 import Lottie from "lottie-react-native";
 import Toast from "react-native-root-toast";
+import { TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const login = () => {
+    if (!email || !password) {
+      Toast.show("Please fill all fields", {
+        duration: Toast.durations.SHORT,
+        position: 100,
+        shadow: true,
+        animation: true,
+      });
+      return;
+    }
     setLoading(true);
     try {
       signInWithEmailAndPassword(auth, email, password)
@@ -123,10 +136,14 @@ const Login = () => {
     }
   }, []);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <SafeAreaView
       style={{
-        flex: 1,
+        flex: loading ? 1 : 1,
         justifyContent: loading ? "center" : undefined,
         alignItems: loading ? "center" : undefined,
         backgroundColor: "white",
@@ -134,119 +151,156 @@ const Login = () => {
         alignItems: "center",
       }}
     >
-      {loading ? (
-        <Lottie
-          source={Loader2}
-          autoPlay
-          loop
-          style={{ width: "100%", height: 200 }}
-        />
-      ) : (
-        <KeyboardAvoidingView>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 100,
-            }}
-          >
-            <Text style={{ color: "#003580", fontSize: 17, fontWeight: "700" }}>
-              Sign In
-            </Text>
-
-            <Text style={{ marginTop: 15, fontSize: 18, fontWeight: "500" }}>
-              Sign In to Your Account
-            </Text>
-          </View>
-
-          <View style={{ marginTop: 50 }}>
-            <View>
-              <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-                Email
-              </Text>
-
-              <TextInput
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                placeholder="enter your email id"
-                placeholderTextColor={"black"}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
+      >
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: loading ? "center" : undefined,
+            alignItems: loading ? "center" : undefined,
+          }}
+        >
+          {loading ? (
+            <Lottie
+              source={Loader2}
+              autoPlay
+              loop
+              style={{ width: "100%", height: 200 }}
+            />
+          ) : (
+            <>
+              <View
                 style={{
-                  fontSize: email ? 18 : 18,
-                  borderBottomColor: "gray",
-                  borderBottomWidth: 1,
-                  marginVertical: 10,
-                  width: 300,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 100,
                 }}
-              />
-            </View>
+              >
+                <Text
+                  style={{ color: "#003580", fontSize: 17, fontWeight: "700" }}
+                >
+                  Sign In
+                </Text>
 
-            <View style={{ marginTop: 15 }}>
-              <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-                Password
-              </Text>
+                <Text
+                  style={{ marginTop: 15, fontSize: 18, fontWeight: "500" }}
+                >
+                  Sign In to Your Account
+                </Text>
+              </View>
 
-              <TextInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry={true}
-                placeholder="Password"
-                placeholderTextColor={"black"}
+              <View style={{ marginTop: 50 }}>
+                <View>
+                  <Text
+                    style={{ fontSize: 18, fontWeight: "600", color: "gray" }}
+                  >
+                    Email
+                  </Text>
+
+                  <TextInput
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    placeholder="enter your email"
+                    placeholderTextColor={"black"}
+                    style={{
+                      fontSize: email ? 18 : 18,
+                      borderBottomColor: "gray",
+                      borderBottomWidth: 1,
+                      marginVertical: 10,
+                      width: "90%",
+                    }}
+                  />
+                </View>
+
+                <View style={{ marginTop: 15 }}>
+                  <Text
+                    style={{ fontSize: 18, fontWeight: "600", color: "gray" }}
+                  >
+                    Password
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                    }}
+                  >
+                    <TextInput
+                      value={password}
+                      onChangeText={(text) => setPassword(text)}
+                      secureTextEntry={!showPassword}
+                      placeholder="Password"
+                      placeholderTextColor={"black"}
+                      style={{
+                        fontSize: password ? 18 : 18,
+                        borderBottomColor: "gray",
+                        borderBottomWidth: 1,
+                        marginVertical: 10,
+                        width: "90%",
+                      }}
+                    />
+                    <TouchableOpacity onPress={togglePasswordVisibility}>
+                      <Feather
+                        name={showPassword ? "eye-off" : "eye"}
+                        size={24}
+                        color="black"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <Pressable
+                  onPress={onPressResetPassword}
+                  style={{
+                    marginTop: 20,
+                  }}
+                >
+                  <Text style={{ fontSize: 18, color: "gray" }}>
+                    Forgot password? reset
+                  </Text>
+                </Pressable>
+              </View>
+
+              <Pressable
+                onPress={login}
                 style={{
-                  fontSize: password ? 18 : 18,
-                  borderBottomColor: "gray",
-                  borderBottomWidth: 1,
-                  marginVertical: 10,
-                  width: 300,
+                  width: 200,
+                  backgroundColor: "#003580",
+                  padding: 15,
+                  borderRadius: 7,
+                  marginTop: 50,
+                  marginLeft: "auto",
+                  marginRight: "auto",
                 }}
-              />
-            </View>
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "white",
+                    fontSize: 17,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Login
+                </Text>
+              </Pressable>
 
-            <Pressable
-              onPress={onPressResetPassword}
-              style={{
-                marginTop: 20,
-              }}
-            >
-              <Text style={{ fontSize: 18, color: "gray" }}>
-                Forgot password? reset
-              </Text>
-            </Pressable>
-          </View>
-
-          <Pressable
-            onPress={login}
-            style={{
-              width: 200,
-              backgroundColor: "#003580",
-              padding: 15,
-              borderRadius: 7,
-              marginTop: 50,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                color: "white",
-                fontSize: 17,
-                fontWeight: "bold",
-              }}
-            >
-              Login
-            </Text>
-          </Pressable>
-
-          <Pressable
-            onPress={() => navigation.navigate("Register")}
-            style={{ marginTop: 20 }}
-          >
-            <Text style={{ textAlign: "center", color: "gray", fontSize: 17 }}>
-              Don't have an account? Sign up
-            </Text>
-          </Pressable>
-        </KeyboardAvoidingView>
-      )}
+              <Pressable
+                onPress={() => navigation.navigate("Register")}
+                style={{ marginTop: 20 }}
+              >
+                <Text
+                  style={{ textAlign: "center", color: "gray", fontSize: 17 }}
+                >
+                  Don't have an account? Sign up
+                </Text>
+              </Pressable>
+            </>
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
