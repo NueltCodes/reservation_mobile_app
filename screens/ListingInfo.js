@@ -1,6 +1,7 @@
 import {
   Dimensions,
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,15 +15,21 @@ import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { amenities, perks } from "../Inputs";
-import Modal from "react-native-modals";
-import ReactNativeModernDatepicker, {
-  getFormatedDate,
-} from "react-native-modern-datepicker";
+import {
+  BottomModal,
+  ModalButton,
+  ModalContent,
+  ModalFooter,
+  ModalTitle,
+  SlideAnimation,
+} from "react-native-modals";
+import { getFormatedDate } from "react-native-modern-datepicker";
 import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import Features from "../components/Features";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
+import Dates from "../components/Dates";
 
 const ListingInfo = () => {
   const route = useRoute();
@@ -32,8 +39,7 @@ const ListingInfo = () => {
   const [openEndDatePicker, setOpenEndDatePicker] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
-  const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(2);
+  const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [startedDate, setStartedDate] = useState("YY/MM/DD");
   const [endedDate, setEndedDate] = useState("YY/MM/DD");
@@ -61,6 +67,7 @@ const ListingInfo = () => {
 
   const handleOnPressEndDate = () => {
     setOpenEndDatePicker(!openEndDatePicker);
+    return true; // Return true to prevent the default back button behavior
   };
 
   useLayoutEffect(() => {
@@ -125,355 +132,467 @@ const ListingInfo = () => {
   }
 
   return (
-    <ScrollView vertical showsVerticalScrollIndicator={false}>
-      <Swiper
-        style={{ height: 400 }}
-        loop={false}
-        // showsPagination={false}
-        index={0}
-      >
-        {property.photos.map((photo, index) => (
-          <View key={index}>
-            <Image
-              source={{ uri: photo }}
+    <>
+      <ScrollView vertical showsVerticalScrollIndicator={false}>
+        <Swiper
+          style={{ height: 400 }}
+          loop={false}
+          // showsPagination={false}
+          index={0}
+        >
+          {property.photos.map((photo, index) => (
+            <View key={index}>
+              <Image
+                source={{ uri: photo }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </View>
+          ))}
+        </Swiper>
+        <View style={{ margin: 20 }}>
+          <View>
+            <Text style={{ fontWeight: 900, fontSize: 25 }}>
+              {property.name}
+            </Text>
+          </View>
+          <View style={styles.category}>
+            <View
               style={{
-                width: "100%",
-                height: "100%",
+                flexDirection: "row",
+                gap: 10,
+                paddingTop: 10,
+                alignItems: "center",
+              }}
+            >
+              <FontAwesome name="flag-checkered" size={24} color="black" />
+              <Text style={{ fontWeight: 500, fontSize: 16 }}>
+                {property.country}
+              </Text>
+            </View>
+            <Text style={{ fontWeight: 500, fontSize: 16, color: "green" }}>
+              {property.category}
+            </Text>
+          </View>
+          <View style={styles.ratingContainer}>
+            <Ionicons
+              name="star-sharp"
+              size={18}
+              color="black"
+              style={styles.starIcon}
+            />
+            <Text style={{ fontSize: 15 }}>{property.rating}</Text>
+          </View>
+          <View style={styles.locationContainer}>
+            <Ionicons name="location" size={20} color="red" />
+
+            <Text style={{ fontSize: 15 }}>{property.address}</Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginTop: 10,
+              // gap: 10,
+            }}
+          >
+            <View style={styles.rooms}>
+              <Ionicons name="bed-outline" size={24} color="gray" />
+              <Text style={styles.options}>{property.rooms} rooms</Text>
+            </View>
+            <View style={styles.rooms}>
+              <FontAwesome name="shower" size={20} color="gray" />
+              <Text style={styles.options}>{property.bathrooms} bathroom</Text>
+            </View>
+            <View style={styles.rooms}>
+              <FontAwesome5 name="users" size={20} color="gray" />
+              <Text style={styles.options}>max guest {property.maxGuest}</Text>
+            </View>
+          </View>
+
+          <View style={{ marginTop: 30 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <Text
+                style={{ fontSize: 20, fontWeight: "bold", color: "#5e5c5d" }}
+              >
+                What this place offers
+              </Text>
+              <MaterialIcons name="local-offer" size={28} color="#f25e90" />
+            </View>
+
+            <Text
+              style={{
+                borderColor: "#E0E0E0",
+                borderWidth: 1,
+                height: 1,
+                marginTop: 20,
               }}
             />
+
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "500",
+                color: "#5e5c5d",
+                marginTop: 30,
+                textDecorationLine: "underline",
+              }}
+            >
+              Amenities
+            </Text>
+
+            <Features gridData={gridData} />
+
+            <Text
+              style={{
+                borderColor: "#E0E0E0",
+                borderWidth: 1,
+                height: 1,
+                marginTop: 30,
+              }}
+            />
+
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "500",
+                color: "#5e5c5d",
+                marginTop: 30,
+                textDecorationLine: "underline",
+              }}
+            >
+              Unique features
+            </Text>
+            <Features gridData={perkData} />
           </View>
-        ))}
-      </Swiper>
-      <View style={{ margin: 20 }}>
-        <View>
-          <Text style={{ fontWeight: 900, fontSize: 25 }}>{property.name}</Text>
-        </View>
-        <View style={styles.category}>
-          <Text style={{ fontWeight: 500, fontSize: 16 }}>
-            {property.country}
-          </Text>
-          <Text style={{ fontWeight: 500, fontSize: 16 }}>
-            {property.category}
-          </Text>
-        </View>
-        <View style={styles.ratingContainer}>
-          <Ionicons
-            name="star-sharp"
-            size={18}
-            color="black"
-            style={styles.starIcon}
+
+          <Text
+            style={{
+              borderColor: "#E0E0E0",
+              borderWidth: 1,
+              height: 1,
+              marginTop: 30,
+            }}
           />
-          <Text style={{ fontSize: 15 }}>{property.rating}</Text>
-        </View>
-        <View style={styles.locationContainer}>
-          <Ionicons name="location" size={20} color="red" />
 
-          <Text style={{ fontSize: 15 }}>{property.address}</Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 10,
-            gap: 10,
-          }}
-        >
-          <View style={styles.rooms}>
-            <Ionicons name="bed-outline" size={22} color="gray" />
-            <Text style={styles.options}>{property.rooms} rooms</Text>
-          </View>
-          <View style={styles.rooms}>
-            <FontAwesome name="shower" size={20} color="gray" />
-            <Text style={styles.options}>{property.bathrooms} bathroom</Text>
-          </View>
-          <View style={styles.rooms}>
-            <FontAwesome5 name="users" size={20} color="gray" />
-            <Text style={styles.options}>max guest {property.maxGuest}</Text>
-          </View>
-        </View>
-
-        <View style={{ marginTop: 30 }}>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
               gap: 10,
+              marginTop: 30,
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: "bold", color: "#5e5c5d" }}
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                color: "#5e5c5d",
+              }}
             >
-              What this place offers
+              House rule
             </Text>
-            <MaterialIcons name="local-offer" size={28} color="#f25e90" />
+            <Octicons name="law" size={24} color="gray" />
           </View>
 
-          <Text
+          <View
             style={{
-              borderColor: "#E0E0E0",
-              borderWidth: 1,
-              height: 1,
-              marginTop: 20,
-            }}
-          />
-
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "500",
-              color: "#5e5c5d",
-              marginTop: 30,
-              textDecorationLine: "underline",
-            }}
-          >
-            Amenities
-          </Text>
-
-          <Features gridData={gridData} />
-
-          <Text
-            style={{
-              borderColor: "#E0E0E0",
-              borderWidth: 1,
-              height: 1,
+              flexDirection: "column",
+              gap: 20,
+              paddingRight: 20,
               marginTop: 30,
             }}
-          />
-
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "500",
-              color: "#5e5c5d",
-              marginTop: 30,
-              textDecorationLine: "underline",
-            }}
           >
-            Unique features
-          </Text>
-          <Features gridData={perkData} />
-        </View>
-
-        <Text
-          style={{
-            borderColor: "#E0E0E0",
-            borderWidth: 1,
-            height: 1,
-            marginTop: 30,
-          }}
-        />
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 10,
-            marginTop: 30,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              color: "#5e5c5d",
-            }}
-          >
-            Things to know / House rule
-          </Text>
-          <Octicons name="law" size={24} color="gray" />
-        </View>
-
-        <Text
-          style={{
-            borderColor: "#E0E0E0",
-            borderWidth: 1,
-            height: 1,
-            marginTop: 20,
-          }}
-        />
-
-        <View
-          style={{
-            flexDirection: "column",
-            gap: 20,
-            paddingRight: 20,
-            marginTop: 30,
-          }}
-        >
-          <View style={styles.rules}>
-            <MaterialCommunityIcons
-              name="timer-outline"
-              size={24}
-              color="black"
-            />
-            <Text style={{ fontSize: 17 }}>
-              Check-in after {property.checkIn}
-            </Text>
-          </View>
-          <View style={styles.rules}>
-            <MaterialCommunityIcons
-              name="timer-off-outline"
-              size={24}
-              color="black"
-            />
-            <Text style={{ fontSize: 17 }}>
-              Check-out before {property.checkOut}
-            </Text>
-          </View>
-          <View style={styles.rules}>
-            <MaterialIcons name="pets" size={24} color="black" />
-
-            <Text style={{ fontSize: 17 }}>
-              {property.pets === "No" ? "No pets allowed" : "Pets allowed"}
-            </Text>
-          </View>
-          <View style={styles.rules}>
-            <MaterialCommunityIcons
-              name="smoking-off"
-              size={24}
-              color="black"
-            />
-            <Text style={{ fontSize: 17 }}>
-              {property.smoking === "No"
-                ? "No smoking allowed"
-                : "Smoking allowed but carefully and neatly done"}
-            </Text>
-          </View>
-          <View style={styles.rules}>
-            <MaterialCommunityIcons
-              name="party-popper"
-              size={24}
-              color="black"
-            />
-            <Text style={{ fontSize: 17 }}>
-              {property.party === "No"
-                ? "No party / event allowed"
-                : "Small party / event allowed but with an extra fee"}
-            </Text>
-          </View>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingHorizontal: 10,
-            borderColor: "#FFC72C",
-            borderRadius: 6,
-            borderWidth: 2,
-            paddingVertical: 18,
-            marginVertical: 20,
-          }}
-        >
-          {/*  Start date select View */}
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Feather
-              name="calendar"
-              size={24}
-              color="black"
-              onPress={handleOnPressStartDate}
-            />
-            <TouchableOpacity onPress={handleOnPressStartDate}>
-              <Text style={{ fontSize: 14 }}>Start Date</Text>
-              <Text style={{ fontSize: 18 }}>
-                {selectedStartDate ? selectedStartDate : startedDate}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/*  End date select View */}
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Feather
-              name="calendar"
-              size={24}
-              color="black"
-              onPress={handleOnPressEndDate}
-            />
-            <TouchableOpacity onPress={handleOnPressEndDate}>
-              <Text style={{ fontSize: 14 }}>End Date</Text>
-              <Text style={{ fontSize: 18 }}>
-                {selectedEndDate ? selectedEndDate : endedDate}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/*  Start date Modal View */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          onHardwareBackPress={handleOnPressStartDate}
-          // overlayBackgroundColor="#5e5c5d"
-          visible={openStartDatePicker}
-        >
-          <View style={styles.centeredView} onPress={handleOnPressStartDate}>
-            <View style={styles.modalView}>
-              <ReactNativeModernDatepicker
-                mode="calendar"
-                minimumDate={startDate}
-                selected={selectedStartDate ? selectedStartDate : startedDate}
-                onDateChanged={handleChangeStartDate}
-                onSelectedChange={(date) => setSelectedStartDate(date)}
-                options={{
-                  backgroundColor: "#080516",
-                  textHeaderColor: "white",
-                  textDefaultColor: "#FFFFFF",
-                  selectedTextColor: "#FFF",
-                  mainColor: "#469ab6",
-                  textSecondaryColor: "#FFFFFF",
-                  borderColor: "rgba(122, 146, 165, 0.1)",
-                }}
+            <View style={styles.rules}>
+              <MaterialCommunityIcons
+                name="timer-outline"
+                size={24}
+                color="black"
               />
+              <Text style={{ fontSize: 17 }}>
+                Check-in after {property.checkIn}
+              </Text>
+            </View>
+            <View style={styles.rules}>
+              <MaterialCommunityIcons
+                name="timer-off-outline"
+                size={24}
+                color="black"
+              />
+              <Text style={{ fontSize: 17 }}>
+                Check-out before {property.checkOut}
+              </Text>
+            </View>
+            <View style={styles.rules}>
+              <MaterialIcons name="pets" size={24} color="black" />
 
+              <Text style={{ fontSize: 17 }}>
+                {property.pets === "No" ? "No pets allowed" : "Pets allowed"}
+              </Text>
+            </View>
+            <View style={styles.rules}>
+              <MaterialCommunityIcons
+                name="smoking-off"
+                size={24}
+                color="black"
+              />
+              <Text style={{ fontSize: 17 }}>
+                {property.smoking === "No"
+                  ? "No smoking allowed"
+                  : "Smoking allowed but carefully and neatly done"}
+              </Text>
+            </View>
+            <View style={styles.rules}>
+              <MaterialCommunityIcons
+                name="party-popper"
+                size={24}
+                color="black"
+              />
+              <Text style={{ fontSize: 17 }}>
+                {property.party === "No"
+                  ? "No party / event allowed"
+                  : "Small party / event allowed but with an extra fee"}
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              marginTop: 30,
+            }}
+          >
+            <Text
+              style={{ fontSize: 17, color: "#5e5c5d", fontWeight: "bold" }}
+            >
+              Make your reservation's below:
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingHorizontal: 10,
+              borderColor: "#FFC72C",
+              borderRadius: 6,
+              borderWidth: 2,
+              paddingVertical: 18,
+              marginVertical: 10,
+            }}
+          >
+            {/*  Start date select View */}
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <Feather
+                name="calendar"
+                size={24}
+                color="black"
+                onPress={handleOnPressStartDate}
+              />
               <TouchableOpacity onPress={handleOnPressStartDate}>
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Select
+                <Text style={{ fontSize: 14 }}>Start Date</Text>
+                <Text style={{ fontSize: 18 }}>
+                  {selectedStartDate ? selectedStartDate : startedDate}
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
 
-        {/*  End date Modal View */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={openEndDatePicker}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <ReactNativeModernDatepicker
-                mode="calendar"
-                minimumDate={selectedStartDate}
-                selected={selectedEndDate ? selectedEndDate : endedDate}
-                onDateChanged={handleChangeEndDate}
-                onSelectedChange={(date) => setSelectedEndDate(date)}
-                options={{
-                  backgroundColor: "#080516",
-                  textHeaderColor: "#469ab6",
-                  textDefaultColor: "#FFFFFF",
-                  selectedTextColor: "#FFF",
-                  mainColor: "#469ab6",
-                  textSecondaryColor: "#FFFFFF",
-                  borderColor: "rgba(122, 146, 165, 0.1)",
-                }}
+            {/*  End date select View */}
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <Feather
+                name="calendar"
+                size={24}
+                color="black"
+                onPress={handleOnPressEndDate}
               />
-
               <TouchableOpacity onPress={handleOnPressEndDate}>
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Select
+                <Text style={{ fontSize: 14 }}>End Date</Text>
+                <Text style={{ fontSize: 18 }}>
+                  {selectedEndDate ? selectedEndDate : endedDate}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-      </View>
-    </ScrollView>
+
+          {/*  Start date Modal View */}
+          <Dates
+            startedDate={startedDate}
+            endedDate={endedDate}
+            startDate={startDate}
+            selectedStartDate={selectedStartDate}
+            selectedEndDate={selectedEndDate}
+            openStartDatePicker={openStartDatePicker}
+            openEndDatePicker={openEndDatePicker}
+            handleOnPressStartDate={handleOnPressStartDate}
+            handleOnPressEndDate={handleOnPressEndDate}
+            handleChangeStartDate={handleChangeStartDate}
+            handleChangeEndDate={handleChangeEndDate}
+            setSelectedStartDate={setSelectedStartDate}
+            setSelectedEndDate={setSelectedEndDate}
+          />
+
+          <View style={{ paddingVertical: 10 }}>
+            <Text style={{ fontSize: 17, lineHeight: 30 }}>
+              State your numbers and category below.
+              <Text style={{ fontSize: 17, color: "red" }}>Note</Text> the
+              maximum guest for this place is ({property.maxGuest}) guest max!
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setModalVisibile(!modalVisibile)}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+              paddingHorizontal: 10,
+              borderColor: "#FFC72C",
+              borderWidth: 2,
+              paddingVertical: 15,
+            }}
+          >
+            <Ionicons name="person-outline" size={24} color="black" />
+            <Text style={{ color: "red" }}>
+              {`${adults} adults • ${children} Children`}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      <BottomModal
+        swipeThreshold={200}
+        onBackdropPress={() => setModalVisibile(!modalVisibile)}
+        swipeDirection={["up", "down"]}
+        footer={
+          <ModalFooter>
+            <ModalButton
+              text="Apply"
+              style={{
+                marginBottom: 20,
+                backgroundColor: "white",
+              }}
+              onPress={() => setModalVisibile(!modalVisibile)}
+            />
+          </ModalFooter>
+        }
+        modalTitle={<ModalTitle title="Select rooms and guests" />}
+        modalAnimation={
+          new SlideAnimation({
+            slideFrom: "bottom",
+          })
+        }
+        onHardwareBackPress={() => setModalVisibile(!modalVisibile)}
+        visible={modalVisibile}
+        onTouchOutside={() => setModalVisibile(!modalVisibile)}
+      >
+        <ModalContent style={{ width: "100%", height: 310 }}>
+          {/* Adult Part */}
+          <View style={styles.modalOptions}>
+            <Text style={styles.optionsText}>Adult</Text>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <Pressable
+                onPress={() => setAdults(Math.max(1, adults - 1))}
+                style={styles.actionOption}
+              >
+                <Text
+                  style={{
+                    // textAlign: "center",
+                    fontSize: 20,
+                    fontWeight: "600",
+                    // paddingHorizontal: 6,
+                  }}
+                >
+                  -
+                </Text>
+              </Pressable>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "500",
+                }}
+              >
+                {adults}
+              </Text>
+              <Pressable
+                onPress={() => setAdults((i) => i + 1)}
+                style={styles.actionOption}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "600",
+                  }}
+                >
+                  +
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {/* Children Part */}
+          <View style={styles.modalOptions}>
+            <Text style={styles.optionsText}>Children</Text>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <Pressable
+                onPress={() => setChildren(Math.max(0, children - 1))}
+                style={styles.actionOption}
+              >
+                <Text
+                  style={{
+                    // textAlign: "center",
+                    fontSize: 20,
+                    fontWeight: "600",
+                    // paddingHorizontal: 6,
+                  }}
+                >
+                  -
+                </Text>
+              </Pressable>
+
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "500",
+                }}
+              >
+                {children}
+              </Text>
+              <Pressable
+                onPress={() => setChildren((i) => i + 1)}
+                style={styles.actionOption}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "600",
+                  }}
+                >
+                  +
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </ModalContent>
+      </BottomModal>
+    </>
   );
 };
 
@@ -507,12 +626,12 @@ const styles = StyleSheet.create({
     gap: 5,
     borderWidth: 1,
     borderRadius: 10,
-    width: 93,
+    width: 100,
     height: 65,
     padding: 8,
   },
   options: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 500,
     color: "gray",
   },
@@ -543,5 +662,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  modalOptions: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 15,
+  },
+  actionOption: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderColor: "#BEBEBE",
+    backgroundColor: "#E0E0E0",
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  optionsText: {
+    fontSize: 16,
+    fontWeight: "500",
   },
 });

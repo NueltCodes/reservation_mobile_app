@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 const SearchResults = ({ data, input, setInput }) => {
   const navigation = useNavigation();
@@ -16,38 +18,105 @@ const SearchResults = ({ data, input, setInput }) => {
       <FlatList
         data={data}
         renderItem={({ item }) => {
-          if (item.place.toLowerCase().includes(input.toLowerCase())) {
+          if (item.country.toLowerCase().includes(input.toLowerCase())) {
             if (input === "") {
               return null;
             }
             return (
               <Pressable
                 onPress={() => {
-                  setInput(item.place);
-                  navigation.navigate("Home", {
-                    input: item.place,
+                  setInput(item.country);
+                  navigation.navigate("ListingInfo", {
+                    // input: item.country,
+                    property: item,
                   });
                 }}
                 style={{
                   flexDirection: "row",
-                  alignItems: "center",
                   marginVertical: 10,
                 }}
               >
-                <View>
-                  <Image
-                    style={{ width: 70, height: 70 }}
-                    source={{ uri: item.placeImage }}
-                  />
-                </View>
+                {item.photos && item.photos.length > 0 && (
+                  <View>
+                    <Image
+                      style={{ width: 70, height: 100 }}
+                      source={{ uri: item.photos[0] }}
+                    />
+                  </View>
+                )}
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={{ fontSize: 15, fontWeight: "500" }}>
-                    {item.place}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 10,
+                      alignItems: "center",
+                    }}
+                  >
+                    <FontAwesome
+                      name="flag-checkered"
+                      size={24}
+                      color="black"
+                    />
+
+                    <Text style={{ fontSize: 15, fontWeight: "500" }}>
+                      {item.country}
+                    </Text>
+                  </View>
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 18, paddingTop: 4 }}
+                  >
+                    {item.name.length > 40
+                      ? item.name && item.name.slice(0, 40) + "..."
+                      : item.name}
                   </Text>
-                  <Text style={{ marginVertical: 4 }}>{item.view}</Text>
-                  <Text style={{ color: "gray", fontSize: 15 }}>
-                    {item.properties.length} Properties
+                  <Text
+                    style={{ marginVertical: 4, width: 250, lineHeight: 25 }}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {item.address}
                   </Text>
+
+                  <View style={styles.ratingContainer}>
+                    {Array.from({ length: Math.floor(item.rating) }, (_, i) => (
+                      <Ionicons
+                        key={i}
+                        name="star-sharp"
+                        size={18}
+                        color="#FFC72C"
+                        style={styles.starIcon}
+                      />
+                    ))}
+                    {item.rating % 1 !== 0 && (
+                      <Ionicons
+                        name="star-half-sharp"
+                        size={18}
+                        color="#FFC72C"
+                        style={styles.starIcon}
+                      />
+                    )}
+                    <Text style={{ color: "black" }}>({item.rating})</Text>
+                  </View>
+                  <View
+                    style={{
+                      backgroundColor: "#003580",
+                      padding: 1,
+                      marginTop: 5,
+                      width: 120,
+                      borderRadius: 10,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: "bold",
+                        color: "white",
+                      }}
+                    >
+                      ${item.price} per night
+                    </Text>
+                  </View>
                 </View>
               </Pressable>
             );
@@ -60,4 +129,10 @@ const SearchResults = ({ data, input, setInput }) => {
 
 export default SearchResults;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 7,
+  },
+});

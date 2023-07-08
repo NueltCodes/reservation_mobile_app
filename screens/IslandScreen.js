@@ -9,11 +9,14 @@ import { db } from "../firebase";
 import Card from "../components/Card";
 import Lottie from "lottie-react-native";
 import Loader2 from "../assets/loading2.json";
+import { Feather } from "@expo/vector-icons";
+import { TextInput } from "react-native";
 
 const IslandScreen = () => {
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState("");
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -59,10 +62,59 @@ const IslandScreen = () => {
     fetchProducts();
   }, [items]);
 
+  const filterProperties = () => {
+    if (input.trim() === "") {
+      return items; // Return all properties if search input is empty
+    } else {
+      return items.filter((property) =>
+        property.name.toLowerCase().includes(input.toLowerCase())
+      );
+    }
+  };
+
+  const renderProperties = () => {
+    const filteredProperties = filterProperties();
+    if (filteredProperties.length === 0) {
+      return (
+        <View style={styles.noResultContainer}>
+          <Text style={styles.noResultText}>
+            No properties matching this name found.
+          </Text>
+          <Text style={styles.suggestionText}>
+            Please try searching with a different name.
+          </Text>
+        </View>
+      );
+    }
+    return filteredProperties.map((property, id) => (
+      <Card key={id} property={property} />
+    ));
+  };
+
   return (
     <>
       {/* <View> */}
       <Header active={2} />
+      <View
+        style={{
+          padding: 10,
+          margin: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderColor: "#FFC72C",
+          borderWidth: 4,
+          borderRadius: 10,
+        }}
+      >
+        <TextInput
+          value={input}
+          onChangeText={(text) => setInput(text)}
+          placeholder="Search by name of apartments"
+          style={{ width: "80%" }}
+        />
+        <Feather name="search" size={22} color="black" />
+      </View>
 
       <ScrollView vertical showsVerticalScrollIndicator={false}>
         <View
@@ -86,9 +138,7 @@ const IslandScreen = () => {
                 gap: 20,
               }}
             >
-              {items.map((property, id) => (
-                <Card key={id} property={property} />
-              ))}
+              {renderProperties()}
             </View>
           )}
         </View>
@@ -104,5 +154,22 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
     marginTop: 50,
+  },
+  noResultContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    marginTop: 40,
+  },
+  noResultText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  suggestionText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 10,
+    color: "gray",
   },
 });

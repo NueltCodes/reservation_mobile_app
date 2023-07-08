@@ -24,6 +24,7 @@ import { ModalButton } from "react-native-modals";
 import { ModalTitle } from "react-native-modals";
 import { SlideAnimation } from "react-native-modals";
 import { ModalContent } from "react-native-modals";
+import Dates from "../components/Dates";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -32,7 +33,7 @@ const HomeScreen = () => {
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(2);
+  const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [active, setActive] = useState(1);
   const [modalVisibile, setModalVisibile] = useState(false);
@@ -58,10 +59,12 @@ const HomeScreen = () => {
 
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
+    return true; // Return true to prevent the default back button behavior
   };
 
   const handleOnPressEndDate = () => {
     setOpenEndDatePicker(!openEndDatePicker);
+    return true; // Return true to prevent the default back button behavior
   };
 
   useLayoutEffect(() => {
@@ -204,73 +207,22 @@ const HomeScreen = () => {
           </View>
 
           {/*  Start date Modal View */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={openStartDatePicker}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <ReactNativeModernDatepicker
-                  mode="calendar"
-                  minimumDate={startDate}
-                  selected={selectedStartDate ? selectedStartDate : startedDate}
-                  onDateChanged={handleChangeStartDate}
-                  onSelectedChange={(date) => setSelectedStartDate(date)}
-                  options={{
-                    backgroundColor: "#080516",
-                    textHeaderColor: "#469ab6",
-                    textDefaultColor: "#FFFFFF",
-                    selectedTextColor: "#FFF",
-                    mainColor: "#469ab6",
-                    textSecondaryColor: "#FFFFFF",
-                    borderColor: "rgba(122, 146, 165, 0.1)",
-                  }}
-                />
 
-                <TouchableOpacity onPress={handleOnPressStartDate}>
-                  <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Select
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-          {/*  End date Modal View */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={openEndDatePicker}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <ReactNativeModernDatepicker
-                  mode="calendar"
-                  minimumDate={selectedStartDate}
-                  selected={selectedEndDate ? selectedEndDate : endedDate}
-                  onDateChanged={handleChangeEndDate}
-                  onSelectedChange={(date) => setSelectedEndDate(date)}
-                  options={{
-                    backgroundColor: "#080516",
-                    textHeaderColor: "#469ab6",
-                    textDefaultColor: "#FFFFFF",
-                    selectedTextColor: "#FFF",
-                    mainColor: "#469ab6",
-                    textSecondaryColor: "#FFFFFF",
-                    borderColor: "rgba(122, 146, 165, 0.1)",
-                  }}
-                />
-
-                <TouchableOpacity onPress={handleOnPressEndDate}>
-                  <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Select
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
+          <Dates
+            startedDate={startedDate}
+            endedDate={endedDate}
+            startDate={startDate}
+            selectedStartDate={selectedStartDate}
+            selectedEndDate={selectedEndDate}
+            openStartDatePicker={openStartDatePicker}
+            openEndDatePicker={openEndDatePicker}
+            handleOnPressStartDate={handleOnPressStartDate}
+            handleOnPressEndDate={handleOnPressEndDate}
+            handleChangeStartDate={handleChangeStartDate}
+            handleChangeEndDate={handleChangeEndDate}
+            setSelectedStartDate={setSelectedStartDate}
+            setSelectedEndDate={setSelectedEndDate}
+          />
           {/*  Room and Guest View */}
           <TouchableOpacity
             onPress={() => setModalVisibile(!modalVisibile)}
@@ -399,7 +351,7 @@ const HomeScreen = () => {
           </Pressable>
         </ScrollView>
 
-        <Pressable
+        <View
           style={{
             marginTop: 40,
             justifyContent: "center",
@@ -417,7 +369,7 @@ const HomeScreen = () => {
           >
             Reservation.com
           </Text>
-        </Pressable>
+        </View>
       </ScrollView>
       {/* </View> */}
 
@@ -615,27 +567,5 @@ const styles = StyleSheet.create({
   optionsText: {
     fontSize: 16,
     fontWeight: "500",
-  },
-  centeredView: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "#080516",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    padding: 35,
-    width: "90%",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
 });

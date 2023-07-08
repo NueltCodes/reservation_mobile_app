@@ -18,7 +18,7 @@ const SearchScreen = () => {
     if (items.length > 0) return;
 
     const fetchProducts = async () => {
-      const colRef = collection(db, "places");
+      const colRef = collection(db, "Listings");
 
       const docsSnap = await getDocs(colRef);
       docsSnap.forEach((doc) => {
@@ -43,7 +43,7 @@ const SearchScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: "Search Places",
+      title: "Search by Country",
       headerTitleStyle: {
         fontSize: 20,
         fontWeight: "bold",
