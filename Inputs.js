@@ -68,44 +68,44 @@ export const amenities = [
 export const perks = [
   {
     label: "Pool",
-    icon: <MaterialIcons name="pool" size={24} color="black" />,
+    icon: <MaterialIcons name="pool" size={24} color="gray" />,
   },
   {
     label: "Hot tub",
-    icon: <MaterialCommunityIcons name="hot-tub" size={24} color="black" />,
+    icon: <MaterialCommunityIcons name="hot-tub" size={24} color="gray" />,
     description: "This property has an hot tub!",
   },
   {
     label: "Mountain",
-    icon: <Foundation name="mountains" size={24} color="black" />,
+    icon: <Foundation name="mountains" size={24} color="gray" />,
     description: "This property has an hot tub!",
   },
   {
     label: "Patio",
-    icon: <MaterialCommunityIcons name="balcony" size={24} color="black" />,
+    icon: <MaterialCommunityIcons name="balcony" size={24} color="gray" />,
     description: "This property is has a balcony/courtyard!",
   },
   {
     label: "BBQ grill",
     icon: (
-      <MaterialCommunityIcons name="grill-outline" size={24} color="black" />
+      <MaterialCommunityIcons name="grill-outline" size={24} color="gray" />
     ),
   },
   {
     label: "Outdoor fire-place",
-    icon: <MaterialCommunityIcons name="campfire" size={24} color="black" />,
+    icon: <MaterialCommunityIcons name="campfire" size={24} color="gray" />,
   },
 
   {
     label: "Ps5",
-    icon: <Ionicons name="game-controller-outline" size={24} color="black" />,
+    icon: <Ionicons name="game-controller-outline" size={24} color="gray" />,
     description: "indoor fire place!",
   },
 
   {
     label: "Gym equipment",
     icon: (
-      <MaterialCommunityIcons name="weight-lifter" size={24} color="black" />
+      <MaterialCommunityIcons name="weight-lifter" size={24} color="gray" />
     ),
   },
   {
@@ -114,18 +114,18 @@ export const perks = [
   },
   {
     label: "Outdoor shower",
-    icon: <FontAwesome name="shower" size={24} color="black" />,
+    icon: <FontAwesome name="shower" size={24} color="gray" />,
   },
   {
     label: "Ocean view",
-    icon: <MaterialCommunityIcons name="water-polo" size={24} color="black" />,
+    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
   },
 ];
 
 export const safetyGuide = [
   {
     label: "Fire extinguisher",
-    icon: <FontAwesome name="fire-extinguisher" size={24} color="black" />,
+    icon: <FontAwesome name="fire-extinguisher" size={24} color="gray" />,
   },
   {
     label: "Carbon monoxide alaram",
@@ -133,13 +133,13 @@ export const safetyGuide = [
       <MaterialCommunityIcons
         name="alarm-light-off-outline"
         size={24}
-        color="black"
+        color="gray"
       />
     ),
   },
   {
     label: "Security dogs",
-    icon: <MaterialCommunityIcons name="dog" size={24} color="black" />,
+    icon: <MaterialCommunityIcons name="dog" size={24} color="gray" />,
   },
   {
     label: "Smoke alarm",
@@ -147,7 +147,7 @@ export const safetyGuide = [
       <MaterialCommunityIcons
         name="smoke-detector-variant-off"
         size={24}
-        color="black"
+        color="gray"
       />
     ),
   },

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -68,7 +68,7 @@ const Card = ({ property }) => {
             alignItems: "center",
           }}
         >
-          <FontAwesome5 name="flag" size={24} color="black" />
+          <FontAwesome name="flag-checkered" size={24} color="black" />
           <Text style={{ fontSize: 15, fontWeight: 600 }}>
             {property.country}
           </Text>

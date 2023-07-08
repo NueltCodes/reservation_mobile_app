@@ -15,8 +15,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { amenities, perks } from "../Inputs";
 import Modal from "react-native-modals";
-import ReactNativeModernDatepicker from "react-native-modern-datepicker";
+import ReactNativeModernDatepicker, {
+  getFormatedDate,
+} from "react-native-modern-datepicker";
 import { TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import Features from "../components/Features";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 
 const ListingInfo = () => {
   const route = useRoute();
@@ -31,6 +37,8 @@ const ListingInfo = () => {
   const [children, setChildren] = useState(0);
   const [startedDate, setStartedDate] = useState("YY/MM/DD");
   const [endedDate, setEndedDate] = useState("YY/MM/DD");
+  const [modalVisibile, setModalVisibile] = useState(false);
+
   const today = new Date();
 
   const startDate = getFormatedDate(
@@ -46,9 +54,9 @@ const ListingInfo = () => {
   function handleChangeEndDate(propDate) {
     setEndedDate(propDate);
   }
-
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
+    return true; // Return true to prevent the default back button behavior
   };
 
   const handleOnPressEndDate = () => {
@@ -117,7 +125,7 @@ const ListingInfo = () => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView vertical showsVerticalScrollIndicator={false}>
       <Swiper
         style={{ height: 400 }}
         loop={false}
@@ -136,7 +144,7 @@ const ListingInfo = () => {
           </View>
         ))}
       </Swiper>
-      <View style={{ padding: 20 }}>
+      <View style={{ margin: 20 }}>
         <View>
           <Text style={{ fontWeight: 900, fontSize: 25 }}>{property.name}</Text>
         </View>
@@ -177,15 +185,16 @@ const ListingInfo = () => {
             <Text style={styles.options}>{property.rooms} rooms</Text>
           </View>
           <View style={styles.rooms}>
-            <FontAwesome name="shower" size={22} color="gray" />
+            <FontAwesome name="shower" size={20} color="gray" />
             <Text style={styles.options}>{property.bathrooms} bathroom</Text>
           </View>
           <View style={styles.rooms}>
-            <FontAwesome5 name="users" size={22} color="gray" />
+            <FontAwesome5 name="users" size={20} color="gray" />
             <Text style={styles.options}>max guest {property.maxGuest}</Text>
           </View>
         </View>
-        <View style={{ marginTop: 20 }}>
+
+        <View style={{ marginTop: 30 }}>
           <View
             style={{
               flexDirection: "row",
@@ -194,105 +203,158 @@ const ListingInfo = () => {
               gap: 10,
             }}
           >
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+            <Text
+              style={{ fontSize: 20, fontWeight: "bold", color: "#5e5c5d" }}
+            >
               What this place offers
             </Text>
-            <MaterialIcons name="local-offer" size={28} color="red" />
+            <MaterialIcons name="local-offer" size={28} color="#f25e90" />
           </View>
 
           <Text
             style={{
-              fontSize: 22,
+              borderColor: "#E0E0E0",
+              borderWidth: 1,
+              height: 1,
+              marginTop: 20,
+            }}
+          />
+
+          <Text
+            style={{
+              fontSize: 18,
               fontWeight: "500",
-              color: "gray",
+              color: "#5e5c5d",
               marginTop: 30,
-              textAlign: "center",
+              textDecorationLine: "underline",
             }}
           >
             Amenities
           </Text>
-          <View style={{ flexDirection: "column" }}>
-            {gridData.map((rowData, rowIndex) => (
-              <View key={rowIndex} style={{ flexDirection: "row", gap: 20 }}>
-                {rowData.map((amenity, colIndex) => (
-                  <View
-                    key={colIndex}
-                    style={{
-                      flex: 1,
-                      marginTop: 15,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginRight: 8,
-                    }}
-                  >
-                    {amenity.icon}
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontWeight: "500",
-                        marginLeft: 5,
-                        color: "gray",
-                      }}
-                    >
-                      {amenity.label}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-          </View>
+
+          <Features gridData={gridData} />
 
           <Text
             style={{
-              fontSize: 22,
-              fontWeight: "500",
-              color: "gray",
+              borderColor: "#E0E0E0",
+              borderWidth: 1,
+              height: 1,
               marginTop: 30,
-              textAlign: "center",
+            }}
+          />
+
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "500",
+              color: "#5e5c5d",
+              marginTop: 30,
+              textDecorationLine: "underline",
             }}
           >
             Unique features
           </Text>
-          <View style={{ flexDirection: "column" }}>
-            {perkData.map((rowData, rowIndex) => (
-              <View key={rowIndex} style={{ flexDirection: "row", gap: 20 }}>
-                {rowData.map((amenity, colIndex) => (
-                  <View
-                    key={colIndex}
-                    style={{
-                      flex: 1,
-                      marginTop: 15,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginRight: 8,
-                    }}
-                  >
-                    {amenity.icon}
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontWeight: "500",
-                        marginLeft: 5,
-                        color: "gray",
-                      }}
-                    >
-                      {amenity.label}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            ))}
+          <Features gridData={perkData} />
+        </View>
+
+        <Text
+          style={{
+            borderColor: "#E0E0E0",
+            borderWidth: 1,
+            height: 1,
+            marginTop: 30,
+          }}
+        />
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 30,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#5e5c5d",
+            }}
+          >
+            Things to know / House rule
+          </Text>
+          <Octicons name="law" size={24} color="gray" />
+        </View>
+
+        <Text
+          style={{
+            borderColor: "#E0E0E0",
+            borderWidth: 1,
+            height: 1,
+            marginTop: 20,
+          }}
+        />
+
+        <View
+          style={{
+            flexDirection: "column",
+            gap: 20,
+            paddingRight: 20,
+            marginTop: 30,
+          }}
+        >
+          <View style={styles.rules}>
+            <MaterialCommunityIcons
+              name="timer-outline"
+              size={24}
+              color="black"
+            />
+            <Text style={{ fontSize: 17 }}>
+              Check-in after {property.checkIn}
+            </Text>
           </View>
-        </View>
-        <View>
-          <Text>Check after {chekIn}</Text>
-          <Text> Check out before {chekOut}</Text>
-        </View>
-        <View>
-          <Text>Are pets allowed? {pets}</Text>
-          <Text>Am I allowed to smoke on the property? {smoking}</Text>
-          <Text> Are party or event allowed? {party}</Text>
-          <Text> Are party or event allowed? {party}</Text>
+          <View style={styles.rules}>
+            <MaterialCommunityIcons
+              name="timer-off-outline"
+              size={24}
+              color="black"
+            />
+            <Text style={{ fontSize: 17 }}>
+              Check-out before {property.checkOut}
+            </Text>
+          </View>
+          <View style={styles.rules}>
+            <MaterialIcons name="pets" size={24} color="black" />
+
+            <Text style={{ fontSize: 17 }}>
+              {property.pets === "No" ? "No pets allowed" : "Pets allowed"}
+            </Text>
+          </View>
+          <View style={styles.rules}>
+            <MaterialCommunityIcons
+              name="smoking-off"
+              size={24}
+              color="black"
+            />
+            <Text style={{ fontSize: 17 }}>
+              {property.smoking === "No"
+                ? "No smoking allowed"
+                : "Smoking allowed but carefully and neatly done"}
+            </Text>
+          </View>
+          <View style={styles.rules}>
+            <MaterialCommunityIcons
+              name="party-popper"
+              size={24}
+              color="black"
+            />
+            <Text style={{ fontSize: 17 }}>
+              {property.party === "No"
+                ? "No party / event allowed"
+                : "Small party / event allowed but with an extra fee"}
+            </Text>
+          </View>
         </View>
 
         <View
@@ -305,6 +367,7 @@ const ListingInfo = () => {
             borderRadius: 6,
             borderWidth: 2,
             paddingVertical: 18,
+            marginVertical: 20,
           }}
         >
           {/*  Start date select View */}
@@ -344,9 +407,11 @@ const ListingInfo = () => {
         <Modal
           animationType="slide"
           transparent={true}
+          onHardwareBackPress={handleOnPressStartDate}
+          // overlayBackgroundColor="#5e5c5d"
           visible={openStartDatePicker}
         >
-          <View style={styles.centeredView}>
+          <View style={styles.centeredView} onPress={handleOnPressStartDate}>
             <View style={styles.modalView}>
               <ReactNativeModernDatepicker
                 mode="calendar"
@@ -356,7 +421,7 @@ const ListingInfo = () => {
                 onSelectedChange={(date) => setSelectedStartDate(date)}
                 options={{
                   backgroundColor: "#080516",
-                  textHeaderColor: "#469ab6",
+                  textHeaderColor: "white",
                   textDefaultColor: "#FFFFFF",
                   selectedTextColor: "#FFF",
                   mainColor: "#469ab6",
@@ -447,8 +512,36 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   options: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 500,
     color: "gray",
+  },
+  rules: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
+  },
+  centeredView: {
+    width: 300,
+    backgroundColor: "#080516", // Transparent background
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: "#080516",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    padding: 20,
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });

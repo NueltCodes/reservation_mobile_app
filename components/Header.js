@@ -42,7 +42,7 @@ const Header = ({ active }) => {
             ]}
           >
             <Fontisto name="island" size={24} color="white" />
-            <Text style={styles.categoryText}>Island</Text>
+            <Text style={styles.categoryText}>Tropical</Text>
           </Pressable>
 
           <Pressable
