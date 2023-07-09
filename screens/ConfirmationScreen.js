@@ -14,6 +14,8 @@ import {
 } from "firebase/firestore";
 import Lottie from "lottie-react-native";
 import booking from "../assets/booking-with-smartphone.json";
+import moment from "moment";
+import { Ionicons } from "@expo/vector-icons";
 
 const ConfirmationScreen = () => {
   const route = useRoute();
@@ -26,15 +28,36 @@ const ConfirmationScreen = () => {
     dispatch(savedPlaces(route.params));
 
     try {
-      const bookingsCollectionRef = collection(db, "users", uid, "bookings");
+      const {
+        property,
+        selectedStartDate,
+        selectedEndDate,
+        adults,
+        children,
+      } = route.params;
+
+      const checkInDate = moment(selectedStartDate, "YYYY-MM-DD").toDate();
+      const checkOutDate = moment(selectedEndDate, "YYYY-MM-DD").toDate();
+
+      const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+      const numberOfDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
       const bookingData = {
-        ...route.params,
+        property: property,
+        selectedStartDate: selectedStartDate,
+        selectedEndDate: selectedEndDate,
+        numberOfDays: numberOfDays,
+        adults: adults,
+        children: children,
+        totalPrice: numberOfDays * property.price,
         timestamp: serverTimestamp(),
       };
 
+      const bookingsCollectionRef = collection(db, "users", uid, "bookings");
+
       await addDoc(bookingsCollectionRef, bookingData);
 
-      navigation.navigate("Main");
+      navigation.navigate("SuccessPage");
     } catch (error) {
       console.error("Error creating booking:", error);
     }
@@ -60,6 +83,22 @@ const ConfirmationScreen = () => {
   }, []);
 
   const property = route.params.property;
+
+  const getNumberOfDays = () => {
+    const checkInDate = moment(
+      route.params.selectedStartDate,
+      "YYYY-MM-DD"
+    ).toDate();
+    const checkOutDate = moment(
+      route.params.selectedEndDate,
+      "YYYY-MM-DD"
+    ).toDate();
+
+    const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+    const numberOfDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+    return numberOfDays;
+  };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -88,7 +127,6 @@ const ConfirmationScreen = () => {
         >
           <View
             style={{
-              marginHorizontal: 12,
               marginTop: 10,
               flexDirection: "row",
               alignItems: "center",
@@ -111,17 +149,24 @@ const ConfirmationScreen = () => {
                 <Text>{property.rating}</Text>
                 <View
                   style={{
-                    backgroundColor: "#003580",
+                    backgroundColor: "black",
+                    elevation: 4,
                     paddingVertical: 3,
                     borderRadius: 5,
-                    width: 100,
+                    width: 150,
+                    marginLeft: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 5,
                   }}
                 >
+                  <Ionicons name="location" size={20} color="red" />
                   <Text
                     style={{
                       textAlign: "center",
                       color: "white",
-                      fontSize: 15,
+                      fontSize: 18,
                       fontWeight: "bold",
                     }}
                   >
@@ -130,29 +175,27 @@ const ConfirmationScreen = () => {
                 </View>
               </View>
             </View>
-
-            <View
-              style={{
-                backgroundColor: "#0B3A2C",
-                paddingHorizontal: 6,
-                paddingVertical: 4,
-                borderRadius: 6,
-                marginTop: 10,
-                width: 100,
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{ color: "white", fontSize: 15, fontWeight: "bold" }}
-              >
-                {property.category}
-              </Text>
-            </View>
           </View>
 
           <View
             style={{
-              margin: 12,
+              backgroundColor: "#0B3A2C",
+              paddingHorizontal: 6,
+              paddingVertical: 4,
+              borderRadius: 6,
+              marginTop: 15,
+              width: 110,
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 15, fontWeight: "bold" }}>
+              {property.category}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              marginVertical: 15,
               flexDirection: "row",
               alignItems: "center",
               gap: 60,
@@ -180,15 +223,41 @@ const ConfirmationScreen = () => {
               </Text>
             </View>
           </View>
-          <View style={{ margin: 12 }}>
-            <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
-              Total price
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
-              {property.price} {route.params.children} children
+          <View>
+            <View
+              style={{
+                flexDirection: "column",
+                gap: 8,
+              }}
+            >
+              <Text
+                style={{
+                  color: "red",
+                  fontSize: 19,
+                }}
+              >
+                {getNumberOfDays()} night
+              </Text>
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                Per night: ${property.price}
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontSize: 20,
+                marginTop: 10,
+                backgroundColor: "#2c3154",
+                padding: 5,
+                borderRadius: 5,
+                width: 230,
+                textAlign: "center",
+                color: "white",
+              }}
+            >
+              Total fees ${getNumberOfDays() * property.price}
             </Text>
           </View>
-          <View style={{ margin: 12 }}>
+          <View style={{ marginTop: 12 }}>
             <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
               Rooms and Guests
             </Text>
@@ -202,10 +271,9 @@ const ConfirmationScreen = () => {
             onPress={confirmBooking}
             style={{
               backgroundColor: "#003580",
-              width: 120,
-              padding: 5,
-              marginHorizontal: 12,
-              marginBottom: 20,
+              width: "100%",
+              padding: 10,
+              marginVertical: 20,
               borderRadius: 4,
             }}
           >

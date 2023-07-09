@@ -21,6 +21,7 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import IslandScreen from "./screens/IslandScreen";
 import ListingInfo from "./screens/ListingInfo";
+import SuccessPage from "./screens/SuccessPage";
 
 const StackNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -136,6 +137,7 @@ const StackNavigation = () => {
         <Stack.Screen name="Rooms" component={RoomsScreen} />
         <Stack.Screen name="User" component={UserScreen} />
         <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
+        <Stack.Screen name="SuccessPage" component={SuccessPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

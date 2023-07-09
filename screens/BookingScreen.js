@@ -6,6 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 import { ScrollView } from "react-native";
+import Loader2 from "../assets/loading2.json";
+import Lottie from "lottie-react-native";
+import { Pressable } from "react-native";
 
 const BookingScreen = () => {
   const uid = auth.currentUser.uid;
@@ -33,9 +36,8 @@ const BookingScreen = () => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     const fetchBookings = async () => {
-      setLoading(true);
-
       try {
         const bookingsQuery = query(
           collection(db, "users", uid, "bookings"),
@@ -56,7 +58,18 @@ const BookingScreen = () => {
   }, [uid]);
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View
+        style={{
+          margin: loading ? 0 : 20,
+          flexGrow: 1,
+          justifyContent: loading ? "center" : undefined,
+          alignItems: loading ? "center" : undefined,
+        }}
+      >
+        <Lottie source={Loader2} autoPlay loop style={styles.animation} />
+      </View>
+    );
   }
 
   return (
@@ -125,7 +138,7 @@ const BookingScreen = () => {
                     marginTop: 19,
                   }}
                 >
-                  ${booking.newPrice} a night
+                  ${booking.price} a night
                 </Text>
               </View>
               <View style={{ padding: 4 }}>
@@ -227,7 +240,20 @@ const BookingScreen = () => {
             </View>
           ))
         ) : (
-          <Text>No bookings found.</Text>
+          <View style={styles.noBookingsContainer}>
+            <Text style={styles.noBookingsText}>
+              Seems like you haven't made any reservations yet.
+            </Text>
+            <Text style={styles.noBookingsSubText}>
+              Start exploring and book your perfect place!
+            </Text>
+            <Pressable
+              style={styles.searchButton}
+              onPress={() => navigation.navigate("Search")}
+            >
+              <Text style={styles.searchButtonText}>Search for a Place</Text>
+            </Pressable>
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -235,6 +261,10 @@ const BookingScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  animation: {
+    width: "100%",
+    height: 300,
+  },
   container: {
     flex: 1,
     backgroundColor: "red",
@@ -248,7 +278,6 @@ const styles = StyleSheet.create({
     borderColor: "#FFC72C",
     borderWidth: 1,
     borderRadius: 6,
-    // padding: 14,
   },
 
   name: {
@@ -265,6 +294,37 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "400",
     color: "green",
+  },
+  noBookingsContainer: {
+    marginTop: 70,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  noBookingsText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  noBookingsSubText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: "center",
+    color: "gray",
+    fontWeight: "bold",
+  },
+  searchButton: {
+    backgroundColor: "#003580",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  searchButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 export default BookingScreen;

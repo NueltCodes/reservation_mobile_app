@@ -7,6 +7,7 @@ import {
   Pressable,
   TextInput,
   Alert,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -51,153 +52,126 @@ const Register = () => {
         });
       }
     );
+    navigation.navigate("Login");
   };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-        padding: 10,
-        alignItems: "center",
-      }}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
     >
-      <KeyboardAvoidingView>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 100,
-          }}
-        >
-          <Text style={{ color: "#003580", fontSize: 17, fontWeight: "700" }}>
-            Register
-          </Text>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>Register</Text>
 
-          <Text style={{ marginTop: 15, fontSize: 18, fontWeight: "500" }}>
-            Create an Account
-          </Text>
+        <View style={styles.form}>
+          <Text style={styles.inputLabel}>Full Name</Text>
+          <TextInput
+            value={fullName}
+            onChangeText={setFullName}
+            placeholder="Enter your full name"
+            placeholderTextColor="black"
+            style={styles.input}
+          />
+
+          <Text style={styles.inputLabel}>Email</Text>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Enter your email"
+            placeholderTextColor="black"
+            style={styles.input}
+          />
+
+          <Text style={styles.inputLabel}>Password</Text>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholder="Enter your password"
+            placeholderTextColor="black"
+            style={styles.input}
+          />
+
+          <Text style={styles.inputLabel}>Phone</Text>
+          <TextInput
+            value={phone}
+            onChangeText={setPhone}
+            keyboardType="phone-pad"
+            placeholder="Enter your phone number"
+            placeholderTextColor="black"
+            style={styles.input}
+          />
         </View>
 
-        <View style={{ marginTop: 50 }}>
-          <View>
-            <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-              Full name
-            </Text>
-
-            <TextInput
-              value={fullName}
-              onChangeText={(text) => setFullName(text)}
-              placeholder="enter your full name"
-              placeholderTextColor={"black"}
-              style={{
-                fontSize: email ? 18 : 18,
-                borderBottomColor: "gray",
-                borderBottomWidth: 1,
-                marginVertical: 10,
-                width: 300,
-              }}
-            />
-          </View>
-
-          <View>
-            <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-              Email
-            </Text>
-
-            <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              placeholder="enter your email id"
-              placeholderTextColor={"black"}
-              style={{
-                fontSize: email ? 18 : 18,
-                borderBottomColor: "gray",
-                borderBottomWidth: 1,
-                marginVertical: 10,
-                width: 300,
-              }}
-            />
-          </View>
-
-          <View style={{ marginTop: 15 }}>
-            <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-              Password
-            </Text>
-
-            <TextInput
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              secureTextEntry={true}
-              placeholder="Password"
-              placeholderTextColor={"black"}
-              style={{
-                fontSize: password ? 18 : 18,
-                borderBottomColor: "gray",
-                borderBottomWidth: 1,
-                marginVertical: 10,
-                width: 300,
-              }}
-            />
-          </View>
-
-          <View style={{ marginTop: 15 }}>
-            <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-              Phone
-            </Text>
-
-            <TextInput
-              value={phone}
-              onChangeText={(text) => setPhone(text)}
-              placeholder="enter your Phone No"
-              placeholderTextColor={"black"}
-              style={{
-                fontSize: password ? 18 : 18,
-                borderBottomColor: "gray",
-                borderBottomWidth: 1,
-                marginVertical: 10,
-                width: 300,
-              }}
-            />
-          </View>
-        </View>
-
-        <Pressable
-          onPress={register}
-          style={{
-            width: 200,
-            backgroundColor: "#003580",
-            padding: 15,
-            borderRadius: 7,
-            marginTop: 50,
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              color: "white",
-              fontSize: 17,
-              fontWeight: "bold",
-            }}
-          >
-            Register
-          </Text>
+        <Pressable onPress={register} style={styles.registerButton}>
+          <Text style={styles.registerButtonText}>Register</Text>
         </Pressable>
 
         <Pressable
           onPress={() => navigation.goBack()}
-          style={{ marginTop: 20 }}
+          style={styles.signInText}
         >
-          <Text style={{ textAlign: "center", color: "gray", fontSize: 17 }}>
+          <Text style={styles.signInLink}>
             Already have an account? Sign In
           </Text>
         </Pressable>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    margin: 20,
+  },
+  title: {
+    color: "#003580",
+    fontSize: 17,
+    fontWeight: "700",
+    marginTop: 15,
+  },
+  form: {
+    marginTop: 50,
+  },
+  inputLabel: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "gray",
+  },
+  input: {
+    fontSize: 18,
+    borderBottomColor: "gray",
+    borderBottomWidth: 1,
+    marginBottom: 30,
+    marginTop: 10,
+    width: 300,
+  },
+  registerButton: {
+    width: 200,
+    backgroundColor: "#003580",
+    padding: 15,
+    borderRadius: 7,
+    marginTop: 50,
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  registerButtonText: {
+    textAlign: "center",
+    color: "white",
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  signInText: {
+    marginTop: 20,
+  },
+  signInLink: {
+    textAlign: "center",
+    color: "gray",
+    fontSize: 17,
+  },
+});
 export default Register;
-
-const styles = StyleSheet.create({});
