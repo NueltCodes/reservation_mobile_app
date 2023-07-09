@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { savedPlaces } from "../SavedReducer";
 import { auth, db } from "../firebase";
@@ -12,6 +12,8 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
+import Lottie from "lottie-react-native";
+import booking from "../assets/booking-with-smartphone.json";
 
 const ConfirmationScreen = () => {
   const route = useRoute();
@@ -57,134 +59,170 @@ const ConfirmationScreen = () => {
     });
   }, []);
 
+  const property = route.params.property;
+
   return (
-    <View>
-      <Pressable style={{ backgroundColor: "white", margin: 10 }}>
-        <View
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View
+        style={{
+          backgroundColor: "white",
+          height: "100%",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Lottie
+          source={booking}
+          autoPlay
+          loop
           style={{
-            marginHorizontal: 12,
-            marginTop: 10,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
+            width: "100%",
+            height: 300,
+            marginTop: 50,
+            marginBottom: 30,
+            alignSelf: "center",
           }}
+        />
+        <Pressable
+          style={{ backgroundColor: "white", margin: 10, marginTop: 50 }}
         >
-          <View>
-            <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-              {route.params.name}
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 6,
-                marginTop: 7,
-              }}
-            >
-              <MaterialIcons name="stars" size={24} color="green" />
-              <Text>{route.params.rating}</Text>
+          <View
+            style={{
+              marginHorizontal: 12,
+              marginTop: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <View>
+              <Text style={{ fontSize: 25, fontWeight: "bold" }}>
+                {property.name}
+              </Text>
               <View
                 style={{
-                  backgroundColor: "#003580",
-                  paddingVertical: 3,
-                  borderRadius: 5,
-                  width: 100,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 6,
+                  marginTop: 7,
                 }}
               >
-                <Text
+                <Feather name="star" size={24} color="black" />
+                <Text>{property.rating}</Text>
+                <View
                   style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontSize: 15,
+                    backgroundColor: "#003580",
+                    paddingVertical: 3,
+                    borderRadius: 5,
+                    width: 100,
                   }}
                 >
-                  Guest friendly
-                </Text>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "white",
+                      fontSize: 15,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {property.country}
+                  </Text>
+                </View>
               </View>
+            </View>
+
+            <View
+              style={{
+                backgroundColor: "#0B3A2C",
+                paddingHorizontal: 6,
+                paddingVertical: 4,
+                borderRadius: 6,
+                marginTop: 10,
+                width: 100,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{ color: "white", fontSize: 15, fontWeight: "bold" }}
+              >
+                {property.category}
+              </Text>
             </View>
           </View>
 
           <View
             style={{
-              backgroundColor: "#0B3A2C",
-              paddingHorizontal: 6,
-              paddingVertical: 4,
-              borderRadius: 6,
-              marginTop: 10,
-              width: 100,
+              margin: 12,
+              flexDirection: "row",
               alignItems: "center",
+              gap: 60,
             }}
           >
-            <Text style={{ color: "white", fontSize: 13 }}>
-              type: {route.params.category}
-            </Text>
-          </View>
-        </View>
+            <View>
+              <Text
+                style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}
+              >
+                Check In
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
+                {route.params.selectedStartDate}
+              </Text>
+            </View>
 
-        <View
-          style={{
-            margin: 12,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 60,
-          }}
-        >
-          <View>
+            <View>
+              <Text
+                style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}
+              >
+                Check Out
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
+                {route.params.selectedEndDate}
+              </Text>
+            </View>
+          </View>
+          <View style={{ margin: 12 }}>
             <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
-              Check In
+              Total price
             </Text>
-            <Text
-              style={{ fontSize: 16, fontWeight: "bold", color: "#007FFF" }}
-            >
-              {route.params.selectedStartDate}
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
+              {property.price} {route.params.children} children
             </Text>
           </View>
-
-          <View>
+          <View style={{ margin: 12 }}>
             <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
-              Check Out
+              Rooms and Guests
             </Text>
-            <Text
-              style={{ fontSize: 16, fontWeight: "bold", color: "#007FFF" }}
-            >
-              {route.params.selectedEndDate}
+            <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
+              {property.rooms} rooms • {route.params.adults} adults •{" "}
+              {route.params.children} children
             </Text>
           </View>
-        </View>
-        <View style={{ margin: 12 }}>
-          <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
-            Rooms and Guests
-          </Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
-            {route.params.room} room • {route.params.adults} adults •{" "}
-            {route.params.children} children
-          </Text>
-        </View>
 
-        <Pressable
-          onPress={confirmBooking}
-          style={{
-            backgroundColor: "#003580",
-            width: 120,
-            padding: 5,
-            marginHorizontal: 12,
-            marginBottom: 20,
-            borderRadius: 4,
-          }}
-        >
-          <Text
+          <Pressable
+            onPress={confirmBooking}
             style={{
-              textAlign: "center",
-              color: "white",
-              fontSize: 15,
-              fontWeight: "bold",
+              backgroundColor: "#003580",
+              width: 120,
+              padding: 5,
+              marginHorizontal: 12,
+              marginBottom: 20,
+              borderRadius: 4,
             }}
           >
-            Book Now
-          </Text>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "white",
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              Book Now
+            </Text>
+          </Pressable>
         </Pressable>
-      </Pressable>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 

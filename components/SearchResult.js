@@ -13,6 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 const SearchResults = ({ data, input, setInput }) => {
   const navigation = useNavigation();
+
   return (
     <View style={{ padding: 10 }}>
       <FlatList
