@@ -11,6 +11,7 @@ import Lottie from "lottie-react-native";
 import Loader2 from "../assets/loading2.json";
 import { Feather } from "@expo/vector-icons";
 import { TextInput } from "react-native";
+import NoResult from "../assets/no-result-found.json";
 
 const IslandScreen = () => {
   const navigation = useNavigation();
@@ -77,8 +78,14 @@ const IslandScreen = () => {
     if (filteredProperties.length === 0) {
       return (
         <View style={styles.noResultContainer}>
+          <Lottie
+            source={NoResult}
+            autoPlay
+            loop
+            style={{ width: "100%", height: 300 }}
+          />
           <Text style={styles.noResultText}>
-            No properties matching this name found.
+            No apartment matching this name found.
           </Text>
           <Text style={styles.suggestionText}>
             Please try searching with a different name.
@@ -158,8 +165,7 @@ const styles = StyleSheet.create({
   noResultContainer: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 15,
-    marginTop: 40,
+    padding: 10,
   },
   noResultText: {
     fontSize: 18,

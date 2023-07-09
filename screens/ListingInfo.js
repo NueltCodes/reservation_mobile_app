@@ -30,6 +30,7 @@ import Features from "../components/Features";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import Dates from "../components/Dates";
+import { Alert } from "react-native";
 
 const ListingInfo = () => {
   const route = useRoute();
@@ -131,6 +132,30 @@ const ListingInfo = () => {
     perkData.push(rowData);
   }
 
+  const reservations = () => {
+    if (!selectedStartDate || !selectedEndDate) {
+      Alert.alert(
+        "Incomplete Details",
+        "Please select both the start and end date.",
+        [
+          {
+            text: "OK",
+            onPress: () => console.log("OK Pressed"),
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      navigation.navigate("User", {
+        property: property,
+        selectedStartDate: selectedStartDate,
+        selectedEndDate: selectedEndDate,
+        adults: adults,
+        children: children,
+      });
+    }
+  };
+
   return (
     <>
       <ScrollView vertical showsVerticalScrollIndicator={false}>
@@ -180,7 +205,7 @@ const ListingInfo = () => {
             <Ionicons
               name="star-sharp"
               size={18}
-              color="black"
+              color="#0B3A2C"
               style={styles.starIcon}
             />
             <Text style={{ fontSize: 15 }}>{property.rating}</Text>
@@ -197,7 +222,6 @@ const ListingInfo = () => {
               alignItems: "center",
               justifyContent: "space-between",
               marginTop: 10,
-              // gap: 10,
             }}
           >
             <View style={styles.rooms}>
@@ -224,7 +248,7 @@ const ListingInfo = () => {
               }}
             >
               <Text
-                style={{ fontSize: 20, fontWeight: "bold", color: "#5e5c5d" }}
+                style={{ fontSize: 20, fontWeight: "bold", color: "#40403f" }}
               >
                 What this place offers
               </Text>
@@ -244,7 +268,7 @@ const ListingInfo = () => {
               style={{
                 fontSize: 18,
                 fontWeight: "500",
-                color: "#5e5c5d",
+                color: "#0B3A2C",
                 marginTop: 30,
                 textDecorationLine: "underline",
               }}
@@ -267,7 +291,7 @@ const ListingInfo = () => {
               style={{
                 fontSize: 18,
                 fontWeight: "500",
-                color: "#5e5c5d",
+                color: "#0B3A2C",
                 marginTop: 30,
                 textDecorationLine: "underline",
               }}
@@ -299,7 +323,7 @@ const ListingInfo = () => {
               style={{
                 fontSize: 20,
                 fontWeight: "bold",
-                color: "#5e5c5d",
+                color: "#40403f",
               }}
             >
               House rule
@@ -319,7 +343,7 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="timer-outline"
                 size={24}
-                color="black"
+                color="#40403f"
               />
               <Text style={{ fontSize: 17 }}>
                 Check-in after {property.checkIn}
@@ -329,14 +353,14 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="timer-off-outline"
                 size={24}
-                color="black"
+                color="#40403f"
               />
               <Text style={{ fontSize: 17 }}>
                 Check-out before {property.checkOut}
               </Text>
             </View>
             <View style={styles.rules}>
-              <MaterialIcons name="pets" size={24} color="black" />
+              <MaterialIcons name="pets" size={24} color="#40403f" />
 
               <Text style={{ fontSize: 17 }}>
                 {property.pets === "No" ? "No pets allowed" : "Pets allowed"}
@@ -346,7 +370,7 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="smoking-off"
                 size={24}
-                color="black"
+                color="#40403f"
               />
               <Text style={{ fontSize: 17 }}>
                 {property.smoking === "No"
@@ -358,7 +382,7 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="party-popper"
                 size={24}
-                color="black"
+                color="#40403f"
               />
               <Text style={{ fontSize: 17 }}>
                 {property.party === "No"
@@ -374,7 +398,7 @@ const ListingInfo = () => {
             }}
           >
             <Text
-              style={{ fontSize: 17, color: "#5e5c5d", fontWeight: "bold" }}
+              style={{ fontSize: 17, color: "#0B3A2C", fontWeight: "bold" }}
             >
               Make your reservation's below:
             </Text>
@@ -468,6 +492,30 @@ const ListingInfo = () => {
             <Ionicons name="person-outline" size={24} color="black" />
             <Text style={{ color: "red" }}>
               {`${adults} adults • ${children} Children`}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => reservations()}
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              paddingHorizontal: 10,
+              backgroundColor: "#0B3A2C",
+              paddingVertical: 15,
+              marginTop: 30,
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: 18,
+                fontWeight: "bold",
+              }}
+            >
+              Reserver
             </Text>
           </TouchableOpacity>
         </View>

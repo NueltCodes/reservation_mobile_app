@@ -94,7 +94,7 @@ const HomeScreen = () => {
   }, []);
 
   const searchPlaces = (place) => {
-    if (!route.params || !selectedStartDate || !selectedEndDate) {
+    if (!selectedStartDate || !selectedEndDate) {
       Alert.alert(
         "Incomplete Details",
         "Please enter all the details",
@@ -110,7 +110,7 @@ const HomeScreen = () => {
       );
     }
 
-    if (route.params && selectedStartDate && selectedEndDate) {
+    if (selectedStartDate && selectedEndDate) {
       navigation.navigate("Places", {
         rooms: rooms,
         adults: adults,
@@ -245,7 +245,10 @@ const HomeScreen = () => {
           {/*  Search View */}
           <Pressable
             onPress={() =>
-              searchPlaces(route?.params?.input || route.params.placeName)
+              searchPlaces(
+                route?.params?.input ||
+                  (route.params ? route.params.placeName : "")
+              )
             }
             style={{
               paddingHorizontal: 10,

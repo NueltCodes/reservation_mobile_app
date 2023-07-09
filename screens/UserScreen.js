@@ -5,10 +5,12 @@ import {
   TextInput,
   View,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ScrollView } from "react-native";
+import moment from "moment";
 
 const UserScreen = () => {
   const navigation = useNavigation();
@@ -54,22 +56,46 @@ const UserScreen = () => {
     }
     if (firstName && lastName && email && phoneNo) {
       navigation.navigate("Confirmation", {
-        oldPrice: route.params.oldPrice,
-        newPrice: route.params.newPrice,
-        name: route.params.name,
-        room: route.params.room,
-        category: route.params.category,
-        children: route.params.children,
-        adults: route.params.adults,
-        rating: route.params.rating,
+        property: property,
         selectedStartDate: route.params.selectedStartDate,
         selectedEndDate: route.params.selectedEndDate,
+        children: route.params.children,
+        adults: route.params.adults,
       });
     }
   };
+
+  const property = route.params.property;
+
+  const getNumberOfDays = () => {
+    const checkInDate = moment(
+      route.params.selectedStartDate,
+      "YYYY-MM-DD"
+    ).toDate();
+    const checkOutDate = moment(
+      route.params.selectedEndDate,
+      "YYYY-MM-DD"
+    ).toDate();
+
+    const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+    const numberOfDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+    return numberOfDays;
+  };
+
   return (
-    <>
-      <ScrollView style={{ padding: 20 }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
+    >
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        style={{ margin: 20 }}
+      >
         <View style={{ flexDirection: "column", gap: 10 }}>
           <Text>First Name</Text>
           <TextInput
@@ -112,50 +138,67 @@ const UserScreen = () => {
       <Pressable
         style={{
           backgroundColor: "white",
-          marginTop: "auto",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 40,
+          flexDirection: "column",
+          marginBottom: 10,
           padding: 10,
+          gap: 10,
         }}
       >
         <View>
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 4,
+              flexDirection: "column",
+              paddingTop: 4,
               gap: 8,
             }}
           >
             <Text
               style={{
                 color: "red",
-                fontSize: 20,
-                textDecorationLine: "line-through",
+                fontSize: 19,
               }}
             >
-              {route.params.oldPrice * route.params.adults}
+              {getNumberOfDays()} night
             </Text>
-            <Text style={{ fontSize: 20 }}>
-              Rs {route.params.newPrice * route.params.adults}
-            </Text>
+            <Text style={{ fontSize: 18 }}>Per night: ${property.price}</Text>
           </View>
-          <Text>
-            You Saved {route.params.oldPrice - route.params.newPrice} rupees
+          <Text
+            style={{
+              fontSize: 20,
+              marginTop: 10,
+              backgroundColor: "#0B3A2C",
+              padding: 5,
+              borderRadius: 5,
+              width: 230,
+              textAlign: "center",
+              color: "white",
+            }}
+          >
+            Total fees ${getNumberOfDays() * property.price}
           </Text>
         </View>
         <Pressable
           onPress={finalStep}
-          style={{ backgroundColor: "#007FFF", padding: 10, borderRadius: 5 }}
+          style={{
+            backgroundColor: "#a9c5f5",
+            elevation: 7,
+            padding: 10,
+            borderRadius: 5,
+          }}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: 15 }}>
-            Final Step
+          <Text
+            style={{
+              textAlign: "center",
+              color: "black",
+              fontSize: 20,
+              fontWeight: "bold",
+            }}
+          >
+            Confirm
           </Text>
         </Pressable>
       </Pressable>
-    </>
+    </KeyboardAvoidingView>
   );
 };
 
