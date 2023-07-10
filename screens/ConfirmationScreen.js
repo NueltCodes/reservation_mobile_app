@@ -16,6 +16,7 @@ import Lottie from "lottie-react-native";
 import booking from "../assets/booking-with-smartphone.json";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
+import Toast from "react-native-root-toast";
 
 const ConfirmationScreen = () => {
   const route = useRoute();
@@ -43,6 +44,7 @@ const ConfirmationScreen = () => {
       const numberOfDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
 
       const bookingData = {
+        user: uid,
         property: property,
         selectedStartDate: selectedStartDate,
         selectedEndDate: selectedEndDate,
@@ -53,13 +55,21 @@ const ConfirmationScreen = () => {
         timestamp: serverTimestamp(),
       };
 
-      const bookingsCollectionRef = collection(db, "users", uid, "bookings");
+      const bookingsCollectionRef = collection(db, "bookings");
 
       await addDoc(bookingsCollectionRef, bookingData);
 
       navigation.navigate("SuccessPage");
     } catch (error) {
       console.error("Error creating booking:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to create booking. Please try again.",
+        position: "bottom",
+        visibilityTime: 4000,
+        autoHide: true,
+      });
     }
   };
 

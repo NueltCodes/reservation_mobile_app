@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -25,6 +25,9 @@ import { ModalTitle } from "react-native-modals";
 import { SlideAnimation } from "react-native-modals";
 import { ModalContent } from "react-native-modals";
 import Dates from "../components/Dates";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
+import Card from "../components/Card";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -37,9 +40,47 @@ const HomeScreen = () => {
   const [children, setChildren] = useState(0);
   const [active, setActive] = useState(1);
   const [modalVisibile, setModalVisibile] = useState(false);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
   const route = useRoute();
   const today = new Date();
 
+  useEffect(() => {
+    if (items?.length > 0) return;
+
+    setLoading(true);
+
+    const fetchProducts = async () => {
+      const colRef = query(
+        collection(db, "bookings"),
+        orderBy("timestamp", "desc")
+      );
+      const docsSnap = await getDocs(colRef);
+      docsSnap.forEach((doc) => {
+        items.push(doc.data());
+      });
+      setLoading(false);
+    };
+    fetchProducts();
+  }, [items]);
+
+  // const fetchBookings = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const bookingsQuery = query(
+  //       collection(db, "users", uid, "bookings"),
+  //       orderBy("timestamp", "desc")
+  //     );
+  //     const querySnapshot = await getDocs(bookingsQuery);
+
+  //     const bookingsData = querySnapshot.docs.map((doc) => doc.data());
+  //     setBookings(bookingsData);
+  //     setDataLoaded(true);
+  //   } catch (error) {
+  //     console.error("Error fetching bookings:", error);
+  //   }
+  //   setLoading(false);
+  // };
   const startDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
     "YYYY/MM/DD"
@@ -128,7 +169,11 @@ const HomeScreen = () => {
       {/* <View> */}
       <Header active={active} />
 
-      <ScrollView vertical showsVerticalScrollIndicator={false}>
+      <ScrollView
+        vertical
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: "white" }}
+      >
         <View
           style={{
             margin: 20,
@@ -270,6 +315,28 @@ const HomeScreen = () => {
             </Text>
           </Pressable>
         </View>
+
+        <Text
+          style={{ marginHorizontal: 20, fontSize: 18, fontWeight: "bold" }}
+        >
+          Popular Places
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 20,
+              marginVertical: 20,
+              margin: 10,
+              marginHorizontal: 20,
+            }}
+          >
+            {items.map((property, id) => (
+              <Card key={id} item={property} HomeStyle={true} />
+            ))}
+          </View>
+        </ScrollView>
 
         <Text style={{ marginHorizontal: 20, fontSize: 17, fontWeight: "500" }}>
           Travel More spend less

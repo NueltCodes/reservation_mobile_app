@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Text, View, SafeAreaView, StyleSheet } from "react-native";
 import { collection, query, getDocs, orderBy } from "firebase/firestore";
 import { db, auth } from "../firebase";
@@ -9,6 +9,9 @@ import { ScrollView } from "react-native";
 import Loader2 from "../assets/loading2.json";
 import Lottie from "lottie-react-native";
 import { Pressable } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { categories } from "../Inputs";
 
 const BookingScreen = () => {
   const uid = auth.currentUser.uid;
@@ -82,55 +85,122 @@ const BookingScreen = () => {
     );
   }
 
+  const matchedCategories = bookings.length
+    ? categories.filter((category) => {
+        const bookingCategories = bookings.map(
+          (booking) => booking.property.category
+        );
+        return bookingCategories.some((bookingCategory) =>
+          bookingCategory.includes(category.label)
+        );
+      })
+    : [];
+
   return (
     <SafeAreaView>
-      <ScrollView vertical showsVerticalScrollIndicator={false}>
+      <ScrollView
+        vertical
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+      >
         {bookings.length > 0 ? (
           bookings.map((booking, index) => (
             <View key={index} style={styles.bookingContainer}>
-              <View
-                style={{
-                  padding: 6,
-                  borderRadius: 4,
-                  width: 100,
-                  backgroundColor: "#297aec",
-                  // marginLeft: 4,
-                  borderRadius: 5,
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 7,
-                }}
-              >
-                <Text
+              <View style={{ padding: 4 }}>
+                <View
                   style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontSize: 15,
-                    fontWeight: "bold",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
                   }}
                 >
-                  {booking.selectedStartDate}
-                </Text>
-                <Text
+                  <Text style={styles.name}>
+                    {booking.property.name.length > 20
+                      ? booking.property.name &&
+                        booking.property.name.slice(0, 20) + "..."
+                      : booking.property.name}
+                  </Text>
+                  {matchedCategories.map((category, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        flexDirection: "row",
+                        gap: 5,
+                        paddingHorizontal: 6,
+                        paddingVertical: 4,
+                        alignItems: "center",
+                      }}
+                    >
+                      {category.icon}
+                      <Text
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          fontSize: 15,
+                        }}
+                      >
+                        {category.label}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+                <View style={styles.ratingContainer}>
+                  <Ionicons
+                    name="star-sharp"
+                    size={18}
+                    color="#0B3A2C"
+                    style={styles.starIcon}
+                  />
+                  <Text style={{ fontSize: 15 }}>
+                    {booking.property.rating}
+                  </Text>
+                </View>
+                <View
                   style={{
-                    color: "white",
-                    fontSize: 14,
-                    alignContent: "center",
+                    paddingHorizontal: 6,
+                    paddingVertical: 4,
+                    borderRadius: 6,
+                    marginTop: 10,
                   }}
                 >
-                  to
-                </Text>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontSize: 15,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {booking.selectedEndDate}
-                </Text>
-                <Text
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 7,
+                      marginTop: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: "black",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {booking.selectedStartDate}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "gray",
+                        fontSize: 14,
+                        alignContent: "center",
+                      }}
+                    >
+                      to
+                    </Text>
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: "black",
+                        fontSize: 15,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {booking.selectedEndDate}
+                    </Text>
+                    {/* <Text
                   style={{
                     borderColor: "#E0E0E0",
                     borderWidth: 1,
@@ -139,53 +209,13 @@ const BookingScreen = () => {
                     height: 1,
                     marginTop: 15,
                   }}
-                />
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    color: "white",
-                    marginTop: 19,
-                  }}
-                >
-                  ${booking.price} a night
-                </Text>
-              </View>
-              <View style={{ padding: 4 }}>
-                <Text style={styles.name}>{booking.name}</Text>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 10,
-                    alignItems: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: "#0B3A2C",
-                      paddingHorizontal: 6,
-                      paddingVertical: 4,
-                      borderRadius: 6,
-                      marginTop: 10,
-                      width: 100,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={{ color: "white", fontSize: 13 }}>
-                      type: {booking.category}
-                    </Text>
+                /> */}
                   </View>
-
                   <View
                     style={{
-                      backgroundColor: "white",
-                      elevation: 3,
-                      paddingHorizontal: 6,
-                      paddingVertical: 4,
-                      borderRadius: 6,
+                      flexDirection: "row",
+                      gap: 10,
                       marginTop: 10,
-                      width: 80,
                       alignItems: "center",
                     }}
                   >
@@ -196,56 +226,95 @@ const BookingScreen = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {booking.room} room
+                      {booking.property.rooms}{" "}
+                      {booking.property.rooms > 1 ? "rooms" : "room"}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "gray",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {booking.numberOfDays}{" "}
+                      {booking.numberOfDays > 1 ? "nights" : "night"}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        gap: 10,
+                        alignItems: "center",
+                      }}
+                    >
+                      <FontAwesome
+                        name="flag-checkered"
+                        size={24}
+                        color="black"
+                      />
+                      <Text
+                        style={{
+                          color: "gray",
+                          fontSize: 16,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {booking.property.country}
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 10,
+                      alignItems: "center",
+                      marginTop: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        color: "black",
+                      }}
+                    >
+                      ${booking.property.price} a night
+                    </Text>
+                    <AntDesign name="arrowright" size={24} color="gray" />
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        color: "black",
+                        textDecorationLine: "underline",
+                      }}
+                    >
+                      Total price ${booking.totalPrice}
                     </Text>
                   </View>
                 </View>
-
-                <View style={styles.ratingContainer}>
-                  {Array.from(
-                    { length: Math.floor(booking.rating) },
-                    (_, i) => (
-                      <Ionicons
-                        key={i}
-                        name="star-outline"
-                        size={18}
-                        color="#FFC72C"
-                        style={styles.starIcon}
-                      />
-                    )
-                  )}
-                  {booking.rating % 1 !== 0 && (
-                    <Ionicons
-                      name="star-half-sharp"
-                      size={18}
-                      color="#FFC72C"
-                      style={styles.starIcon}
-                    />
-                  )}
-                  <Text style={{ color: "black" }}>{booking.rating}</Text>
-                </View>
-                <View
+              </View>
+              <View
+                style={{
+                  padding: 6,
+                  borderRadius: 4,
+                  width: 90,
+                  marginTop: 5,
+                  alignSelf: "flex-end",
+                  backgroundColor: "#FFC72C",
+                  borderRadius: 5,
+                }}
+              >
+                <Text
                   style={{
-                    padding: 6,
-                    borderRadius: 4,
-                    width: 90,
-                    marginTop: 2,
-                    backgroundColor: "#FFC72C",
-                    borderRadius: 5,
+                    textAlign: "center",
+                    color: "black",
+                    fontSize: 13,
+                    alignItems: "center",
+                    fontWeight: "400",
                   }}
                 >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "black",
-                      fontSize: 13,
-                      alignItems: "center",
-                      fontWeight: "400",
-                    }}
-                  >
-                    {moment(booking.timestamp.toDate()).fromNow()}
-                  </Text>
-                </View>
+                  {moment(booking.timestamp.toDate()).fromNow()}
+                </Text>
               </View>
             </View>
           ))
@@ -276,27 +345,26 @@ const styles = StyleSheet.create({
     height: 300,
   },
   container: {
-    flex: 1,
-    backgroundColor: "red",
+    backgroundColor: "white",
   },
   bookingContainer: {
-    flexDirection: "row",
-    borderWidth: 2,
-    backgroundColor: "white",
+    flexDirection: "column",
+    backgroundColor: "#f2f7fa",
     marginVertical: 10,
     marginHorizontal: 20,
-    borderColor: "#FFC72C",
-    borderWidth: 1,
-    borderRadius: 6,
+    elevation: 4,
+    borderRadius: 10,
+    padding: 10,
   },
 
   name: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 2,
     marginTop: 7,
   },
   ratingText: {
