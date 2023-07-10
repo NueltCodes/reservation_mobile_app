@@ -252,7 +252,7 @@ const ListingInfo = () => {
               >
                 What this place offers
               </Text>
-              <MaterialIcons name="local-offer" size={28} color="#f25e90" />
+              <MaterialIcons name="local-offer" size={28} color="gray" />
             </View>
 
             <Text
@@ -343,7 +343,7 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="timer-outline"
                 size={24}
-                color="#40403f"
+                color="gray"
               />
               <Text style={{ fontSize: 17 }}>
                 Check-in after {property.checkIn}
@@ -353,14 +353,14 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="timer-off-outline"
                 size={24}
-                color="#40403f"
+                color="gray"
               />
               <Text style={{ fontSize: 17 }}>
                 Check-out before {property.checkOut}
               </Text>
             </View>
             <View style={styles.rules}>
-              <MaterialIcons name="pets" size={24} color="#40403f" />
+              <MaterialIcons name="pets" size={24} color="gray" />
 
               <Text style={{ fontSize: 17 }}>
                 {property.pets === "No" ? "No pets allowed" : "Pets allowed"}
@@ -370,7 +370,7 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="smoking-off"
                 size={24}
-                color="#40403f"
+                color="gray"
               />
               <Text style={{ fontSize: 17 }}>
                 {property.smoking === "No"
@@ -382,7 +382,7 @@ const ListingInfo = () => {
               <MaterialCommunityIcons
                 name="party-popper"
                 size={24}
-                color="#40403f"
+                color="gray"
               />
               <Text style={{ fontSize: 17 }}>
                 {property.party === "No"
@@ -397,9 +397,7 @@ const ListingInfo = () => {
               marginTop: 30,
             }}
           >
-            <Text
-              style={{ fontSize: 17, color: "#0B3A2C", fontWeight: "bold" }}
-            >
+            <Text style={{ fontSize: 18, color: "gray", fontWeight: "bold" }}>
               Make your reservation's below:
             </Text>
           </View>

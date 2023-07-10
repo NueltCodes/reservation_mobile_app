@@ -238,13 +238,13 @@ const ConfirmationScreen = () => {
               >
                 {getNumberOfDays()} night
               </Text>
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+              <Text style={{ fontSize: 19, fontWeight: "bold" }}>
                 Per night: ${property.price}
               </Text>
             </View>
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 18,
                 marginTop: 10,
                 backgroundColor: "#2c3154",
                 padding: 5,
@@ -258,10 +258,10 @@ const ConfirmationScreen = () => {
             </Text>
           </View>
           <View style={{ marginTop: 12 }}>
-            <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 3 }}>
+            <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 3 }}>
               Rooms and Guests
             </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold", color: "gray" }}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: "gray" }}>
               {property.rooms} rooms • {route.params.adults} adults •{" "}
               {route.params.children} children
             </Text>

@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { Text, View, SafeAreaView, StyleSheet } from "react-native";
 import { collection, query, getDocs, orderBy } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 import { ScrollView } from "react-native";
@@ -14,7 +14,9 @@ const BookingScreen = () => {
   const uid = auth.currentUser.uid;
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const navigation = useNavigation();
+  const isFocused = useIsFocused(); // This allows the this page to fetch bookings ones the tabScreen is mounted or active
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -35,29 +37,37 @@ const BookingScreen = () => {
     });
   }, []);
 
-  useEffect(() => {
+  const fetchBookings = async () => {
     setLoading(true);
-    const fetchBookings = async () => {
-      try {
-        const bookingsQuery = query(
-          collection(db, "users", uid, "bookings"),
-          orderBy("timestamp", "desc")
-        );
-        const querySnapshot = await getDocs(bookingsQuery);
+    try {
+      const bookingsQuery = query(
+        collection(db, "users", uid, "bookings"),
+        orderBy("timestamp", "desc")
+      );
+      const querySnapshot = await getDocs(bookingsQuery);
 
-        const bookingsData = querySnapshot.docs.map((doc) => doc.data());
-        setBookings(bookingsData);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      }
+      const bookingsData = querySnapshot.docs.map((doc) => doc.data());
+      setBookings(bookingsData);
+      setDataLoaded(true);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    }
+    setLoading(false);
+  };
 
-      setLoading(false);
-    };
-
+  useEffect(() => {
     fetchBookings();
-  }, [uid]);
 
-  if (loading) {
+    // we are fetching bookings whenever this screen is focused cause as I said above this screen is a bottom bottomTabScreen component so we have to know which of the screens in the bottomTab is active so as to fetch data for
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchBookings();
+    });
+
+    // Cleanup the listener when the component unmounts or loses focus
+    return () => unsubscribe();
+  }, [navigation, uid, isFocused]);
+
+  if (loading || !dataLoaded) {
     return (
       <View
         style={{

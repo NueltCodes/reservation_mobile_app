@@ -36,18 +36,7 @@ const SearchScreen = () => {
 
     fetchProducts();
   }, [items]);
-  // console.log(items);
 
-  // console.log(items.place);
-  // console.log(
-  //   items.map((item) => (
-  //     <>
-  //       {item.properties.map((prop) => (
-  //         <div key={prop.id}>{prop.name}</div>
-  //       ))}
-  //     </>
-  //   ))
-  // );
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -67,7 +56,7 @@ const SearchScreen = () => {
     });
   }, []);
 
-  console.log(items);
+  // console.log(items);
 
   const filterProperties = () => {
     if (input.trim() === "") {
