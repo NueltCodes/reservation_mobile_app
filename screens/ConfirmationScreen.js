@@ -44,7 +44,7 @@ const ConfirmationScreen = () => {
       const numberOfDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
 
       const bookingData = {
-        user: uid,
+        userId: uid,
         property: property,
         selectedStartDate: selectedStartDate,
         selectedEndDate: selectedEndDate,

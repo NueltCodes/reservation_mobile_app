@@ -1,7 +1,15 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { Text, View, SafeAreaView, StyleSheet } from "react-native";
-import { collection, query, getDocs, orderBy } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { Text, View, SafeAreaView, StyleSheet, Button } from "react-native";
+import {
+  collection,
+  query,
+  getDocs,
+  orderBy,
+  where,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
@@ -12,6 +20,8 @@ import { Pressable } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { categories } from "../Inputs";
+import Toast from "react-native-root-toast";
+import { Alert } from "react-native";
 
 const BookingScreen = () => {
   const uid = auth.currentUser.uid;
@@ -44,14 +54,15 @@ const BookingScreen = () => {
     setLoading(true);
     try {
       const bookingsQuery = query(
-        collection(db, "users", uid, "bookings"),
+        collection(db, "bookings"),
+        where("userId", "==", uid),
         orderBy("timestamp", "desc")
       );
       const querySnapshot = await getDocs(bookingsQuery);
 
       const bookingsData = querySnapshot.docs.map((doc) => doc.data());
       setBookings(bookingsData);
-      setDataLoaded(true);
+      console.log("Bookings:", bookingsData);
     } catch (error) {
       console.error("Error fetching bookings:", error);
     }
@@ -59,18 +70,59 @@ const BookingScreen = () => {
   };
 
   useEffect(() => {
-    fetchBookings();
-
-    // we are fetching bookings whenever this screen is focused cause as I said above this screen is a bottom bottomTabScreen component so we have to know which of the screens in the bottomTab is active so as to fetch data for
-    const unsubscribe = navigation.addListener("focus", () => {
+    if (isFocused) {
       fetchBookings();
-    });
+    }
+  }, [isFocused]);
 
-    // Cleanup the listener when the component unmounts or loses focus
-    return () => unsubscribe();
-  }, [navigation, uid, isFocused]);
+  const deleteBooking = async (userId) => {
+    try {
+      const bookingsQuery = query(
+        collection(db, "bookings"),
+        where("userId", "==", userId)
+      );
+      const querySnapshot = await getDocs(bookingsQuery);
+      querySnapshot.forEach((doc) => {
+        deleteDoc(doc.ref);
+      });
 
-  if (loading || !dataLoaded) {
+      Toast.show("Booking deleted successfully.", {
+        duration: Toast.durations.LONG,
+        position: 100,
+        shadow: true,
+        animation: true,
+      });
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+      Toast.show("Error deleting booking, please try again later.", {
+        duration: Toast.durations.SHORT,
+        position: 100,
+        shadow: true,
+        animation: true,
+      });
+    }
+  };
+
+  const handleDelete = (userId) => {
+    Alert.alert(
+      "Confirm Deletion",
+      "Are you sure you want to delete this booking?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => deleteBooking(userId),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  if (loading) {
     return (
       <View
         style={{
@@ -295,25 +347,47 @@ const BookingScreen = () => {
               </View>
               <View
                 style={{
-                  padding: 6,
-                  borderRadius: 4,
-                  width: 90,
-                  marginTop: 5,
-                  alignSelf: "flex-end",
-                  backgroundColor: "#FFC72C",
-                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
               >
-                <Text
+                <View
                   style={{
-                    textAlign: "center",
-                    color: "black",
-                    fontSize: 13,
-                    alignItems: "center",
-                    fontWeight: "400",
+                    padding: 6,
+                    borderRadius: 4,
+                    width: 100,
+                    marginTop: 5,
+                    alignSelf: "flex-end",
+                    backgroundColor: "#FFC72C",
+                    borderRadius: 5,
                   }}
                 >
-                  {moment(booking.timestamp.toDate()).fromNow()}
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "black",
+                      fontSize: 13,
+                      alignItems: "center",
+                      fontWeight: "400",
+                    }}
+                  >
+                    {moment(booking.timestamp.toDate()).fromNow()}
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    backgroundColor: "red",
+                    color: "white",
+                    paddingVertical: 3,
+                    paddingHorizontal: 15,
+                    borderRadius: 5,
+                    fontSize: 15,
+                    fontWeight: "bold",
+                  }}
+                  onPress={() => handleDelete(booking.userId)}
+                >
+                  Delete
                 </Text>
               </View>
             </View>
@@ -346,6 +420,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "white",
+    height: "100%",
   },
   bookingContainer: {
     flexDirection: "column",

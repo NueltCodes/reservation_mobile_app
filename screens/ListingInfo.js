@@ -398,7 +398,7 @@ const ListingInfo = () => {
             }}
           >
             <Text style={{ fontSize: 18, color: "gray", fontWeight: "bold" }}>
-              Make your reservation's below:
+              Make your reservations below:
             </Text>
           </View>
           <View

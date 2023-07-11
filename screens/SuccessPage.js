@@ -54,7 +54,7 @@ const SuccessPage = () => {
         style={styles.searchButton}
         onPress={() => navigation.navigate("Bookings")}
       >
-        <Text style={styles.searchButtonText}>View Reservations</Text>
+        <Text style={styles.searchButtonText}>View Bookings</Text>
       </Pressable>
     </View>
   );
