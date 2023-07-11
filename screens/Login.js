@@ -25,6 +25,8 @@ const Login = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const user = auth.currentUser;
+  const userNameContext = useContext(UserNameContext); // Access the UserNameContext
 
   const login = () => {
     if (!email || !password) {

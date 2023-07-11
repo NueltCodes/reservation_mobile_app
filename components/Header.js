@@ -1,18 +1,24 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "../firebase";
 
 const Header = ({ active }) => {
   const navigation = useNavigation();
+  const user = auth.currentUser;
+  const [userName, setUserName] = useState("");
 
   return (
     <View style={{ backgroundColor: "#003580", paddingVertical: 15 }}>
       <View style={{ paddingHorizontal: 10 }}>
+        <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
+          Welcome, {user ? user.displayName : ""}
+        </Text>
+
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
