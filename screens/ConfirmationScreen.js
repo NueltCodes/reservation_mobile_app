@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
@@ -9,24 +9,31 @@ import {
   addDoc,
   collection,
   doc,
+  getDocs,
+  increment,
   serverTimestamp,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
+import Loader2 from "../assets/loading2.json";
 import Lottie from "lottie-react-native";
 import booking from "../assets/booking-with-smartphone.json";
 import moment from "moment";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
+import { categories } from "../Inputs";
 
 const ConfirmationScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const uid = auth.currentUser.uid;
 
   const confirmBooking = async () => {
     dispatch(savedPlaces(route.params));
+    setLoading(true);
 
     try {
       const {
@@ -35,6 +42,10 @@ const ConfirmationScreen = () => {
         selectedEndDate,
         adults,
         children,
+        firstName,
+        lastName,
+        email,
+        phoneNo,
       } = route.params;
 
       const checkInDate = moment(selectedStartDate, "YYYY-MM-DD").toDate();
@@ -51,21 +62,40 @@ const ConfirmationScreen = () => {
         numberOfDays: numberOfDays,
         adults: adults,
         children: children,
+        phoneNo: phoneNo,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
         totalPrice: numberOfDays * property.price,
         timestamp: serverTimestamp(),
       };
 
       const bookingsCollectionRef = collection(db, "bookings");
-
       await addDoc(bookingsCollectionRef, bookingData);
+
+      const listingsCollectionRef = collection(db, "Listings");
+      const querySnapshot = await getDocs(listingsCollectionRef);
+
+      querySnapshot.forEach(async (doc) => {
+        const listingData = doc.data();
+
+        // Check if the listing's address matches the property's address
+        if (listingData.address === property.address) {
+          const placeRef = doc.ref;
+          const currentPopularityCount = listingData.popularityCount || 0;
+          await updateDoc(placeRef, {
+            popularityCount: currentPopularityCount + 1,
+          });
+        }
+      });
+
+      setLoading(false);
 
       navigation.navigate("SuccessPage");
     } catch (error) {
       console.error("Error creating booking:", error);
-      Toast.show({
+      Toast.show("Error", "Failed to create booking. Please try again.", {
         type: "error",
-        text1: "Error",
-        text2: "Failed to create booking. Please try again.",
         position: "bottom",
         visibilityTime: 4000,
         autoHide: true,
@@ -92,7 +122,11 @@ const ConfirmationScreen = () => {
     });
   }, []);
 
-  const property = route.params.property;
+  const property = route.params.property || {};
+
+  const matchedCategories = categories.filter((category) =>
+    property.category.includes(category.label)
+  );
 
   const getNumberOfDays = () => {
     const checkInDate = moment(
@@ -109,6 +143,21 @@ const ConfirmationScreen = () => {
 
     return numberOfDays;
   };
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          margin: loading ? 0 : 20,
+          flexGrow: 1,
+          justifyContent: loading ? "center" : undefined,
+          alignItems: loading ? "center" : undefined,
+        }}
+      >
+        <Lottie source={Loader2} autoPlay loop style={styles.animation} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -133,14 +182,11 @@ const ConfirmationScreen = () => {
           }}
         />
         <Pressable
-          style={{ backgroundColor: "white", margin: 10, marginTop: 50 }}
+          style={{ backgroundColor: "white", margin: 20, marginTop: 50 }}
         >
           <View
             style={{
               marginTop: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
             }}
           >
             <View>
@@ -151,19 +197,23 @@ const ConfirmationScreen = () => {
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                  gap: 6,
+                  gap: 15,
                   marginTop: 7,
                 }}
               >
-                <Feather name="star" size={24} color="black" />
-                <Text>{property.rating}</Text>
                 <View
                   style={{
-                    backgroundColor: "black",
-                    elevation: 4,
-                    paddingVertical: 3,
-                    borderRadius: 5,
-                    width: 150,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 5,
+                  }}
+                >
+                  <Feather name="star" size={24} color="black" />
+                  <Text style={{ fontSize: 18 }}>{property.rating}</Text>
+                </View>
+                <View
+                  style={{
                     marginLeft: 10,
                     flexDirection: "row",
                     alignItems: "center",
@@ -171,11 +221,10 @@ const ConfirmationScreen = () => {
                     gap: 5,
                   }}
                 >
-                  <Ionicons name="location" size={20} color="red" />
+                  <FontAwesome name="flag-checkered" size={20} color="black" />
                   <Text
                     style={{
-                      textAlign: "center",
-                      color: "white",
+                      color: "gray",
                       fontSize: 18,
                       fontWeight: "bold",
                     }}
@@ -183,24 +232,31 @@ const ConfirmationScreen = () => {
                     {property.country}
                   </Text>
                 </View>
+                {matchedCategories.map((category, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      gap: 5,
+                      paddingHorizontal: 6,
+                      paddingVertical: 4,
+                      alignItems: "center",
+                    }}
+                  >
+                    {category.icon}
+                    <Text
+                      style={{
+                        color: "gray",
+                        fontWeight: "bold",
+                        fontSize: 16,
+                      }}
+                    >
+                      {category.label}
+                    </Text>
+                  </View>
+                ))}
               </View>
             </View>
-          </View>
-
-          <View
-            style={{
-              backgroundColor: "#0B3A2C",
-              paddingHorizontal: 6,
-              paddingVertical: 4,
-              borderRadius: 6,
-              marginTop: 15,
-              width: 110,
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 15, fontWeight: "bold" }}>
-              {property.category}
-            </Text>
           </View>
 
           <View

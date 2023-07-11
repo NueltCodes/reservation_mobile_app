@@ -1,4 +1,8 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { useEffect, useLayoutEffect, useState } from "react";
 import {
   Alert,
@@ -25,9 +29,11 @@ import { ModalTitle } from "react-native-modals";
 import { SlideAnimation } from "react-native-modals";
 import { ModalContent } from "react-native-modals";
 import Dates from "../components/Dates";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import Card from "../components/Card";
+import Loader2 from "../assets/loading2.json";
+import Lottie from "lottie-react-native";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -41,46 +47,60 @@ const HomeScreen = () => {
   const [active, setActive] = useState(1);
   const [modalVisibile, setModalVisibile] = useState(false);
   const [items, setItems] = useState([]);
+  const [latestItems, setLatestItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const route = useRoute();
   const today = new Date();
+  const isFocused = useIsFocused(); // This allows the this page to fetch bookings ones the tabScreen is mounted or active
+
+  const PopularPlaces = async () => {
+    setLoading(true);
+    const colRef = query(
+      collection(db, "Listings"),
+      orderBy("popularityCount", "desc"),
+      limit(5) // Fetch top 5 popular places
+    );
+    const docsSnap = await getDocs(colRef);
+    const uniqueItems = [];
+
+    docsSnap.forEach((doc) => {
+      const data = doc.data();
+
+      // Checking if the item already exists in the uniqueItems array
+      const exists = uniqueItems.some((item) => item.id === data.id); // Assuming the item has a unique identifier 'id'
+
+      // Add the item to uniqueItems array if it doesn't exist
+      if (!exists) {
+        uniqueItems.push(data);
+      }
+    });
+
+    const latestColRef = query(
+      collection(db, "Listings"),
+      orderBy("timestamp", "desc"),
+      limit(5) // Fetch top 5 latest listings
+    );
+    const latestDocsSnap = await getDocs(latestColRef);
+    const latestItems = [];
+
+    latestDocsSnap.forEach((doc) => {
+      const data = doc.data();
+
+      latestItems.push(data);
+    });
+
+    setLoading(false);
+
+    setLatestItems(latestItems);
+    setItems(uniqueItems);
+  };
 
   useEffect(() => {
-    if (items?.length > 0) return;
+    if (isFocused) {
+      PopularPlaces();
+    }
+  }, [isFocused]);
 
-    setLoading(true);
-
-    const fetchProducts = async () => {
-      const colRef = query(
-        collection(db, "bookings"),
-        orderBy("timestamp", "desc")
-      );
-      const docsSnap = await getDocs(colRef);
-      docsSnap.forEach((doc) => {
-        items.push(doc.data());
-      });
-      setLoading(false);
-    };
-    fetchProducts();
-  }, [items]);
-
-  // const fetchBookings = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const bookingsQuery = query(
-  //       collection(db, "users", uid, "bookings"),
-  //       orderBy("timestamp", "desc")
-  //     );
-  //     const querySnapshot = await getDocs(bookingsQuery);
-
-  //     const bookingsData = querySnapshot.docs.map((doc) => doc.data());
-  //     setBookings(bookingsData);
-  //     setDataLoaded(true);
-  //   } catch (error) {
-  //     console.error("Error fetching bookings:", error);
-  //   }
-  //   setLoading(false);
-  // };
   const startDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
     "YYYY/MM/DD"
@@ -164,6 +184,21 @@ const HomeScreen = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <View
+        style={{
+          margin: loading ? 0 : 20,
+          flexGrow: 1,
+          justifyContent: loading ? "center" : undefined,
+          alignItems: loading ? "center" : undefined,
+        }}
+      >
+        <Lottie source={Loader2} autoPlay loop style={styles.animation} />
+      </View>
+    );
+  }
+
   return (
     <>
       {/* <View> */}
@@ -201,134 +236,20 @@ const HomeScreen = () => {
                 : "Enter Your Destination"}
             </Text>
           </Pressable>
-
-          {/*  Date select View */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingHorizontal: 10,
-              borderColor: "#FFC72C",
-              borderWidth: 2,
-              paddingVertical: 18,
-            }}
-          >
-            {/*  Start date select View */}
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-            >
-              <Feather
-                name="calendar"
-                size={24}
-                color="black"
-                onPress={handleOnPressStartDate}
-              />
-              <TouchableOpacity onPress={handleOnPressStartDate}>
-                <Text style={{ fontSize: 14 }}>Start Date</Text>
-                <Text style={{ fontSize: 18 }}>
-                  {selectedStartDate ? selectedStartDate : startedDate}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {/*  End date select View */}
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-            >
-              <Feather
-                name="calendar"
-                size={24}
-                color="black"
-                onPress={handleOnPressEndDate}
-              />
-              <TouchableOpacity onPress={handleOnPressEndDate}>
-                <Text style={{ fontSize: 14 }}>End Date</Text>
-                <Text style={{ fontSize: 18 }}>
-                  {selectedEndDate ? selectedEndDate : endedDate}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/*  Start date Modal View */}
-
-          <Dates
-            startedDate={startedDate}
-            endedDate={endedDate}
-            startDate={startDate}
-            selectedStartDate={selectedStartDate}
-            selectedEndDate={selectedEndDate}
-            openStartDatePicker={openStartDatePicker}
-            openEndDatePicker={openEndDatePicker}
-            handleOnPressStartDate={handleOnPressStartDate}
-            handleOnPressEndDate={handleOnPressEndDate}
-            handleChangeStartDate={handleChangeStartDate}
-            handleChangeEndDate={handleChangeEndDate}
-            setSelectedStartDate={setSelectedStartDate}
-            setSelectedEndDate={setSelectedEndDate}
-          />
-          {/*  Room and Guest View */}
-          <TouchableOpacity
-            onPress={() => setModalVisibile(!modalVisibile)}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-              paddingHorizontal: 10,
-              borderColor: "#FFC72C",
-              borderWidth: 2,
-              paddingVertical: 15,
-            }}
-          >
-            <Ionicons name="person-outline" size={24} color="black" />
-            <Text style={{ color: "red" }}>
-              {` ${rooms} room • ${adults} adults • ${children} Children`}
-            </Text>
-          </TouchableOpacity>
-
-          {/*  Search View */}
-          <Pressable
-            onPress={() =>
-              searchPlaces(
-                route?.params?.input ||
-                  (route.params ? route.params.placeName : "")
-              )
-            }
-            style={{
-              paddingHorizontal: 10,
-              borderColor: "#FFC72C",
-              borderWidth: 2,
-              paddingVertical: 15,
-              backgroundColor: "#2a52be",
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 15,
-                fontWeight: "500",
-                color: "white",
-              }}
-            >
-              Search
-            </Text>
-          </Pressable>
         </View>
 
         <Text
           style={{ marginHorizontal: 20, fontSize: 18, fontWeight: "bold" }}
         >
-          Popular Places
+          Popular places
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 20,
+              gap: 30,
               marginVertical: 20,
-              margin: 10,
               marginHorizontal: 20,
             }}
           >
@@ -338,87 +259,54 @@ const HomeScreen = () => {
           </View>
         </ScrollView>
 
-        <Text style={{ marginHorizontal: 20, fontSize: 17, fontWeight: "500" }}>
-          Travel More spend less
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Pressable
-            style={{
-              width: 200,
-              height: 150,
-              marginTop: 10,
-              backgroundColor: "#003580",
-              borderRadius: 10,
-              padding: 20,
-              marginHorizontal: 20,
-            }}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            onPress={() => navigation.navigate("Search")}
+            style={{ marginHorizontal: 20, fontSize: 18, fontWeight: "bold" }}
           >
-            <Text
-              style={{
-                color: "white",
-                fontSize: 15,
-                fontWeight: "bold",
-                marginVertical: 7,
-              }}
-            >
-              Genius
-            </Text>
-            <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
-              You are at genius level one in our loyalty program
-            </Text>
-          </Pressable>
-
+            New arrivals
+          </Text>
           <Pressable
+            onPress={() => navigation.navigate("Search")}
             style={{
-              width: 200,
-              height: 150,
-              marginTop: 10,
-              borderColor: "#E0E0E0",
-              borderWidth: 2,
-              borderRadius: 10,
-              padding: 20,
               marginHorizontal: 10,
+              backgroundColor: "#f5f5f5",
+              borderRadius: 10,
             }}
           >
             <Text
               style={{
-                fontSize: 15,
+                paddingHorizontal: 5,
+                paddingVertical: 10,
+                fontSize: 18,
                 fontWeight: "bold",
-                marginVertical: 7,
+                color: "gray",
               }}
             >
-              15% Discounts
-            </Text>
-            <Text style={{ fontSize: 15, fontWeight: "500" }}>
-              Complete 5 stays to unlock level 2
+              See more
             </Text>
           </Pressable>
-
-          <Pressable
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View
             style={{
-              width: 200,
-              height: 150,
-              marginTop: 10,
-              borderColor: "#E0E0E0",
-              borderWidth: 2,
-              borderRadius: 10,
-              padding: 20,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 30,
+              marginVertical: 20,
               marginHorizontal: 20,
             }}
           >
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "bold",
-                marginVertical: 7,
-              }}
-            >
-              10% Discounts
-            </Text>
-            <Text style={{ fontSize: 15, fontWeight: "500" }}>
-              Enjoy Discounts at participating at properties worldwide
-            </Text>
-          </Pressable>
+            {latestItems.map((property, id) => (
+              <Card key={id} item={property} HomeStyle={true} />
+            ))}
+          </View>
         </ScrollView>
 
         <View
@@ -442,170 +330,6 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
       {/* </View> */}
-
-      <BottomModal
-        swipeThreshold={200}
-        onBackdropPress={() => setModalVisibile(!modalVisibile)}
-        swipeDirection={["up", "down"]}
-        footer={
-          <ModalFooter>
-            <ModalButton
-              text="Apply"
-              style={{
-                marginBottom: 20,
-                backgroundColor: "white",
-              }}
-              onPress={() => setModalVisibile(!modalVisibile)}
-            />
-          </ModalFooter>
-        }
-        modalTitle={<ModalTitle title="Select rooms and guests" />}
-        modalAnimation={
-          new SlideAnimation({
-            slideFrom: "bottom",
-          })
-        }
-        onHardwareBackPress={() => setModalVisibile(!modalVisibile)}
-        visible={modalVisibile}
-        onTouchOutside={() => setModalVisibile(!modalVisibile)}
-      >
-        <ModalContent style={{ width: "100%", height: 310 }}>
-          <View style={styles.options}>
-            <Text style={styles.optionsText}>Rooms</Text>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-            >
-              <Pressable
-                onPress={() => setRooms(Math.max(1, rooms - 1))}
-                style={styles.actionOption}
-              >
-                <Text
-                  style={{
-                    // textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: "600",
-                    // paddingHorizontal: 6,
-                  }}
-                >
-                  -
-                </Text>
-              </Pressable>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: "500",
-                }}
-              >
-                {rooms}
-              </Text>
-              <Pressable
-                onPress={() => setRooms((i) => i + 1)}
-                style={styles.actionOption}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "600",
-                  }}
-                >
-                  +
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-
-          {/* Adult Part */}
-          <View style={styles.options}>
-            <Text style={styles.optionsText}>Adult</Text>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-            >
-              <Pressable
-                onPress={() => setAdults(Math.max(1, adults - 1))}
-                style={styles.actionOption}
-              >
-                <Text
-                  style={{
-                    // textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: "600",
-                    // paddingHorizontal: 6,
-                  }}
-                >
-                  -
-                </Text>
-              </Pressable>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: "500",
-                }}
-              >
-                {adults}
-              </Text>
-              <Pressable
-                onPress={() => setAdults((i) => i + 1)}
-                style={styles.actionOption}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "600",
-                  }}
-                >
-                  +
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-
-          {/* Children Part */}
-          <View style={styles.options}>
-            <Text style={styles.optionsText}>Children</Text>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-            >
-              <Pressable
-                onPress={() => setChildren(Math.max(0, children - 1))}
-                style={styles.actionOption}
-              >
-                <Text
-                  style={{
-                    // textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: "600",
-                    // paddingHorizontal: 6,
-                  }}
-                >
-                  -
-                </Text>
-              </Pressable>
-
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: "500",
-                }}
-              >
-                {children}
-              </Text>
-              <Pressable
-                onPress={() => setChildren((i) => i + 1)}
-                style={styles.actionOption}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "600",
-                  }}
-                >
-                  +
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </ModalContent>
-      </BottomModal>
     </>
   );
 };
@@ -617,6 +341,10 @@ const styles = StyleSheet.create({
     fontSize: 36,
     marginVertical: 60,
     color: "#111",
+  },
+  animation: {
+    width: "100%",
+    height: 300,
   },
   options: {
     flexDirection: "row",

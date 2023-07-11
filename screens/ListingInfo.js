@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { amenities, perks } from "../Inputs";
+import { amenities, categories, perks } from "../Inputs";
 import {
   BottomModal,
   ModalButton,
@@ -145,6 +145,18 @@ const ListingInfo = () => {
         ],
         { cancelable: false }
       );
+    } else if (adults + children > property.maxGuest) {
+      Alert.alert(
+        "Exceeded Maximum Guests",
+        `The total number of guests (adults + children) cannot exceed ${property.maxGuest} for this property. Please adjust the number of guests.`,
+        [
+          {
+            text: "OK",
+            onPress: () => console.log("OK Pressed"),
+          },
+        ],
+        { cancelable: false }
+      );
     } else {
       navigation.navigate("User", {
         property: property,
@@ -155,6 +167,13 @@ const ListingInfo = () => {
       });
     }
   };
+
+  const matchedCategories = categories.filter((category) =>
+    property.category.includes(category.label)
+  );
+
+  if ((adults, children)) {
+  }
 
   return (
     <>
@@ -197,19 +216,40 @@ const ListingInfo = () => {
                 {property.country}
               </Text>
             </View>
-            <Text style={{ fontWeight: 500, fontSize: 16, color: "green" }}>
-              {property.category}
-            </Text>
+            <View style={styles.ratingContainer}>
+              <Ionicons
+                name="star-sharp"
+                size={18}
+                color="#0B3A2C"
+                style={styles.starIcon}
+              />
+              <Text style={{ fontSize: 15 }}>{property.rating}</Text>
+            </View>
+            {matchedCategories.map((category, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  gap: 5,
+                  paddingHorizontal: 6,
+                  paddingVertical: 4,
+                  alignItems: "center",
+                }}
+              >
+                {category.icon}
+                <Text
+                  style={{
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: 15,
+                  }}
+                >
+                  {category.label}
+                </Text>
+              </View>
+            ))}
           </View>
-          <View style={styles.ratingContainer}>
-            <Ionicons
-              name="star-sharp"
-              size={18}
-              color="#0B3A2C"
-              style={styles.starIcon}
-            />
-            <Text style={{ fontSize: 15 }}>{property.rating}</Text>
-          </View>
+
           <View style={styles.locationContainer}>
             <Ionicons name="location" size={20} color="red" />
 
@@ -242,7 +282,7 @@ const ListingInfo = () => {
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "center",
+                justifyContent: "flex-start",
                 alignItems: "center",
                 gap: 10,
               }}
@@ -313,7 +353,7 @@ const ListingInfo = () => {
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
               gap: 10,
               marginTop: 30,
@@ -501,7 +541,7 @@ const ListingInfo = () => {
               justifyContent: "center",
               gap: 10,
               paddingHorizontal: 10,
-              backgroundColor: "#0B3A2C",
+              backgroundColor: "#003580",
               paddingVertical: 15,
               marginTop: 30,
             }}
@@ -513,7 +553,7 @@ const ListingInfo = () => {
                 fontWeight: "bold",
               }}
             >
-              Reserver
+              Reserve
             </Text>
           </TouchableOpacity>
         </View>
@@ -558,10 +598,8 @@ const ListingInfo = () => {
               >
                 <Text
                   style={{
-                    // textAlign: "center",
                     fontSize: 20,
                     fontWeight: "600",
-                    // paddingHorizontal: 6,
                   }}
                 >
                   -
@@ -603,10 +641,8 @@ const ListingInfo = () => {
               >
                 <Text
                   style={{
-                    // textAlign: "center",
                     fontSize: 20,
                     fontWeight: "600",
-                    // paddingHorizontal: 6,
                   }}
                 >
                   -
@@ -716,9 +752,9 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   actionOption: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: 35,
+    height: 35,
+    borderRadius: 20,
     borderColor: "#BEBEBE",
     backgroundColor: "#E0E0E0",
     flexDirection: "row",

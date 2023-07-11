@@ -17,7 +17,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = () => {
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
@@ -47,7 +47,7 @@ const Register = () => {
 
         setDoc(doc(db, "users", `${uid}`), {
           email: user,
-          fullName: fullName,
+          name: name,
           phone: phone,
         });
       }
@@ -67,11 +67,11 @@ const Register = () => {
         <Text style={styles.title}>Register</Text>
 
         <View style={styles.form}>
-          <Text style={styles.inputLabel}>Full Name</Text>
+          <Text style={styles.inputLabel}>Username</Text>
           <TextInput
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Enter your full name"
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter your name"
             placeholderTextColor="black"
             style={styles.input}
           />

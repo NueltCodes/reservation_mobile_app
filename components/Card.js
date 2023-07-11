@@ -11,22 +11,21 @@ const Card = ({ property, item, HomeStyle }) => {
     <Pressable
       onPress={() =>
         navigation.navigate("ListingInfo", {
-          property: property || item.property,
+          property: property || item,
         })
       }
     >
       <View>
-        {((item?.property?.photos || property?.photos) &&
-          item?.property?.photos?.length > 0) |
+        {((item?.photos || property?.photos) && item?.photos?.length > 0) |
           (property?.photos?.length > 0) && (
           <Image
-            source={{ uri: item?.property?.photos[0] || property?.photos[0] }}
+            source={{ uri: item?.photos[0] || property?.photos[0] }}
             style={{
               width: "100%",
               height: HomeStyle ? 250 : 300,
               borderTopLeftRadius: HomeStyle ? 0 : 20,
-              borderBottomRightRadius: HomeStyle ? 50 : 0,
-              borderTopRightRadius: HomeStyle ? 100 : 20,
+              borderBottomRightRadius: 0,
+              borderTopRightRadius: 20,
             }}
           />
         )}
@@ -46,31 +45,30 @@ const Card = ({ property, item, HomeStyle }) => {
               width: 250,
             }}
           >
-            {property?.name?.length > 40 ||
-            item?.property?.name?.length > 40 ? (
+            {property?.name?.length > 40 || item?.name?.length > 40 ? (
               <Text>
-                {(property?.name || item?.property?.name)?.slice(0, 40)}
+                {(property?.name || item?.name)?.slice(0, 40)}
                 <Text style={{ fontSize: 18 }}>...</Text>
               </Text>
             ) : (
-              property?.name || item?.property?.name
+              property?.name || item?.name
             )}
           </Text>
 
           <View style={styles.ratingContainer}>
             {Array.from(
               {
-                length: Math.floor(property?.rating || item?.property?.rating),
+                length: Math.floor(property?.rating || item?.rating),
               },
               (_, i) => (
                 <Ionicons key={i} name="star-sharp" size={18} color="#FFC72C" />
               )
             )}
-            {property?.rating || item?.property?.rating % 1 !== 0 ? (
+            {property?.rating || item?.rating % 1 !== 0 ? (
               <Ionicons name="star-half-sharp" size={18} color="#FFC72C" />
             ) : null}
             <Text style={{ color: "black" }}>
-              ({property?.rating || item?.property?.rating})
+              ({property?.rating || item?.rating})
             </Text>
           </View>
 
@@ -84,7 +82,7 @@ const Card = ({ property, item, HomeStyle }) => {
           >
             <FontAwesome name="flag-checkered" size={24} color="black" />
             <Text style={{ fontSize: 15, fontWeight: "600" }}>
-              {property?.country || item?.property?.country}
+              {property?.country || item?.country}
             </Text>
           </View>
 
@@ -108,7 +106,7 @@ const Card = ({ property, item, HomeStyle }) => {
                   width: 250,
                 }}
               >
-                {property?.address || item?.property?.address}
+                {property?.address || item?.address}
               </Text>
             </View>
           )}
@@ -129,7 +127,7 @@ const Card = ({ property, item, HomeStyle }) => {
                 color: "white",
               }}
             >
-              ${property?.price || item.property.price} per night
+              ${property?.price || item?.price} per night
             </Text>
           </View>
         </View>

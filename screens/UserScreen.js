@@ -43,7 +43,7 @@ const UserScreen = () => {
     if (!firstName || !lastName || !email || !phoneNo) {
       Alert.alert(
         "Invalide Details",
-        "Please ente all the fields",
+        "Please enter all the fields",
         [
           {
             text: "Cancel",
@@ -57,6 +57,10 @@ const UserScreen = () => {
     if (firstName && lastName && email && phoneNo) {
       navigation.navigate("Confirmation", {
         property: property,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNo: phoneNo,
         selectedStartDate: route.params.selectedStartDate,
         selectedEndDate: route.params.selectedEndDate,
         children: route.params.children,
