@@ -101,29 +101,39 @@ const IslandScreen = () => {
   return (
     <>
       {/* <View> */}
-      <Header active={2} />
-      <View
-        style={{
-          padding: 10,
-          margin: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderColor: "#FFC72C",
-          borderWidth: 4,
-          borderRadius: 10,
-        }}
-      >
-        <TextInput
-          value={input}
-          onChangeText={(text) => setInput(text)}
-          placeholder="Search by name of apartments"
-          style={{ width: "80%" }}
-        />
-        <Feather name="search" size={22} color="black" />
+      <Header active={2} category={true} />
+      <View style={{ backgroundColor: "white" }}>
+        <View
+          style={{
+            padding: 10,
+            marginHorizontal: 10,
+            marginTop: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderColor: "#FFC72C",
+            borderWidth: 4,
+            borderRadius: 10,
+            backgroundColor: "#faf9f7",
+          }}
+        >
+          <TextInput
+            value={input}
+            onChangeText={(text) => setInput(text)}
+            placeholder="Search by name of apartments"
+            style={{ width: "80%" }}
+          />
+          <Feather name="search" size={22} color="black" />
+        </View>
       </View>
-
-      <ScrollView vertical showsVerticalScrollIndicator={false}>
+      <View>
+        <Header active={2} />
+      </View>
+      <ScrollView
+        vertical
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: "white" }}
+      >
         <View
           style={{
             margin: loading ? 0 : 20,
@@ -139,7 +149,7 @@ const IslandScreen = () => {
           ) : (
             <View
               style={{
-                backgroundColor: "#F5F5F5",
+                backgroundColor: "white",
                 marginBottom: 50,
                 flexDirection: "column",
                 gap: 20,

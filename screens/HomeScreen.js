@@ -4,57 +4,55 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { useEffect, useLayoutEffect, useState } from "react";
-import {
-  Alert,
-  Image,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Header from "../components/Header";
 import { Feather } from "@expo/vector-icons";
-import ReactNativeModernDatepicker, {
-  getFormatedDate,
-} from "react-native-modern-datepicker";
-import { BottomModal } from "react-native-modals";
-import { ModalFooter } from "react-native-modals";
-import { ModalButton } from "react-native-modals";
-import { ModalTitle } from "react-native-modals";
-import { SlideAnimation } from "react-native-modals";
-import { ModalContent } from "react-native-modals";
-import Dates from "../components/Dates";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
+
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
 import Card from "../components/Card";
 import Loader2 from "../assets/loading2.json";
 import Lottie from "lottie-react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const [openEndDatePicker, setOpenEndDatePicker] = useState(false);
-  const [selectedStartDate, setSelectedStartDate] = useState("");
-  const [selectedEndDate, setSelectedEndDate] = useState("");
-  const [rooms, setRooms] = useState(1);
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
   const [active, setActive] = useState(1);
-  const [modalVisibile, setModalVisibile] = useState(false);
   const [items, setItems] = useState([]);
   const [latestItems, setLatestItems] = useState([]);
+  const [userName, setUserName] = useState([]);
   const [loading, setLoading] = useState(false);
   const route = useRoute();
-  const today = new Date();
+
   const isFocused = useIsFocused(); // This allows the this page to fetch bookings ones the tabScreen is mounted or active
 
   const PopularPlaces = async () => {
     setLoading(true);
+
+    const user = auth.currentUser;
+    let userName = "";
+
+    if (user) {
+      const userDoc = doc(db, "users", user.uid);
+      const userSnapshot = await getDoc(userDoc);
+
+      if (userSnapshot.exists()) {
+        const userData = userSnapshot.data();
+        userName = userData.fullName;
+      }
+    }
+
     const colRef = query(
       collection(db, "Listings"),
       orderBy("popularityCount", "desc"),
@@ -91,6 +89,7 @@ const HomeScreen = () => {
 
     setLoading(false);
 
+    setUserName(userName);
     setLatestItems(latestItems);
     setItems(uniqueItems);
   };
@@ -100,33 +99,6 @@ const HomeScreen = () => {
       PopularPlaces();
     }
   }, [isFocused]);
-
-  const startDate = getFormatedDate(
-    today.setDate(today.getDate() + 1),
-    "YYYY/MM/DD"
-  );
-
-  const [startedDate, setStartedDate] = useState("YY/MM/DD");
-  const [endedDate, setEndedDate] = useState("YY/MM/DD");
-
-  function handleChangeStartDate(propDate) {
-    setStartedDate(propDate);
-    setEndedDate(propDate);
-  }
-
-  function handleChangeEndDate(propDate) {
-    setEndedDate(propDate);
-  }
-
-  const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
-    return true; // Return true to prevent the default back button behavior
-  };
-
-  const handleOnPressEndDate = () => {
-    setOpenEndDatePicker(!openEndDatePicker);
-    return true; // Return true to prevent the default back button behavior
-  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -154,36 +126,6 @@ const HomeScreen = () => {
     });
   }, []);
 
-  const searchPlaces = (place) => {
-    if (!selectedStartDate || !selectedEndDate) {
-      Alert.alert(
-        "Incomplete Details",
-        "Please enter all the details",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-          { text: "OK", onPress: () => console.log("OK Pressed") },
-        ],
-        { cancelable: false }
-      );
-    }
-
-    if (selectedStartDate && selectedEndDate) {
-      navigation.navigate("Places", {
-        rooms: rooms,
-        adults: adults,
-        children: children,
-        selectedStartDate: selectedStartDate,
-        selectedEndDate: selectedEndDate,
-        place: place,
-        placeName: place,
-      });
-    }
-  };
-
   if (loading) {
     return (
       <View
@@ -202,13 +144,15 @@ const HomeScreen = () => {
   return (
     <>
       {/* <View> */}
-      <Header active={active} />
+      <Header active={active} category userName={userName} />
 
       <ScrollView
         vertical
         showsVerticalScrollIndicator={false}
         style={{ backgroundColor: "white" }}
       >
+        <Header active={active} userName={userName} />
+
         <View
           style={{
             margin: 20,
@@ -275,16 +219,14 @@ const HomeScreen = () => {
           <Pressable
             onPress={() => navigation.navigate("Search")}
             style={{
-              marginHorizontal: 10,
-              backgroundColor: "#f5f5f5",
-              borderRadius: 10,
+              marginHorizontal: 20,
             }}
           >
             <Text
               style={{
-                paddingHorizontal: 5,
+                textDecorationLine: "underline",
                 paddingVertical: 10,
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: "bold",
                 color: "gray",
               }}
@@ -309,9 +251,104 @@ const HomeScreen = () => {
           </View>
         </ScrollView>
 
+        <Text style={{ marginHorizontal: 20, fontSize: 17, fontWeight: "500" }}>
+          Travel More spend less
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Pressable
+            style={{
+              width: 250,
+              height: 200,
+              marginTop: 10,
+              backgroundColor: "#003580",
+              borderRadius: 10,
+              padding: 10,
+              marginHorizontal: 20,
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: 15,
+                fontWeight: "bold",
+                marginVertical: 7,
+              }}
+            >
+              loyality
+            </Text>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 15,
+                fontWeight: "500",
+                lineHeight: 30,
+              }}
+            >
+              Thank you for choosing our reservation service! Your loyalty is
+              greatly appreciated, and we are committed to providing you with
+              exceptional experiences.
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={{
+              width: 250,
+              height: 200,
+              marginTop: 10,
+              borderColor: "#E0E0E0",
+              borderWidth: 2,
+              borderRadius: 10,
+              padding: 10,
+              marginHorizontal: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+                marginVertical: 7,
+              }}
+            >
+              15% Discounts
+            </Text>
+            <Text style={{ fontSize: 15, fontWeight: "500", lineHeight: 30 }}>
+              As our valued customer, you're eligible for a delightful 15%
+              discount. Embark on 5 stays with us to unlock Level 2 and unlock
+              even more exclusive benefits.
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={{
+              width: 200,
+              height: 150,
+              marginTop: 10,
+              borderColor: "#E0E0E0",
+              borderWidth: 2,
+              borderRadius: 10,
+              padding: 20,
+              marginHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+                marginVertical: 7,
+              }}
+            >
+              10% Discounts
+            </Text>
+            <Text style={{ fontSize: 15, fontWeight: "500", lineHeight: 30 }}>
+              Enjoy Discounts at participating at properties worldwide
+            </Text>
+          </Pressable>
+        </ScrollView>
+
         <View
           style={{
-            marginTop: 40,
+            marginTop: 20,
             justifyContent: "center",
             alignItems: "center",
           }}

@@ -5,28 +5,48 @@ import { Fontisto } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../firebase";
 
-const Header = ({ active }) => {
+const Header = ({ active, category, userName }) => {
   const navigation = useNavigation();
-  const user = auth.currentUser;
-  const [userName, setUserName] = useState("");
 
   return (
-    <View style={{ backgroundColor: "#003580", paddingVertical: 15 }}>
-      <View style={{ paddingHorizontal: 10 }}>
-        <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
-          Welcome, {user ? user.displayName : ""}
-        </Text>
-
+    <>
+      {category && (
+        <View style={{ backgroundColor: "#003580", paddingBottom: 15 }}>
+          <View style={{ paddingHorizontal: 10 }}>
+            <View>
+              {userName?.length > 10 ? (
+                <Text
+                  style={{ fontSize: 18, color: "white", paddingBottom: 15 }}
+                >
+                  Welcome, {userName?.slice(0, 10)}
+                  <Text style={{ fontSize: 18 }}>...</Text>
+                </Text>
+              ) : (
+                userName?.name
+              )}
+              <View>
+                <Text
+                  style={{ fontSize: 16, color: "#f2f2f0", paddingBottom: 15 }}
+                >
+                  Let's find you a place to relax
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
+      {!category && (
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
-            backgroundColor: "#003580",
+            backgroundColor: !category ? "white" : "#003580",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-around",
+            paddingVertical: 15,
+            paddingHorizontal: 10,
           }}
         >
           <Pressable
@@ -36,7 +56,7 @@ const Header = ({ active }) => {
               active === 1 ? styles.activeCategory : null,
             ]}
           >
-            <Ionicons name="bed-outline" size={20} color="white" />
+            <Ionicons name="bed-outline" size={20} color="gray" />
             <Text style={styles.categoryText}>Stays</Text>
           </Pressable>
 
@@ -47,7 +67,7 @@ const Header = ({ active }) => {
               active === 2 ? styles.activeCategory : null,
             ]}
           >
-            <Fontisto name="island" size={24} color="white" />
+            <Fontisto name="island" size={24} color="gray" />
             <Text style={styles.categoryText}>Tropical</Text>
           </Pressable>
 
@@ -58,12 +78,12 @@ const Header = ({ active }) => {
               marginRight: 20,
             }}
           >
-            <FontAwesome name="diamond" size={19} color="white" />
+            <FontAwesome name="diamond" size={19} color="gray" />
             <Text
               style={{
                 marginLeft: 8,
                 fontWeight: "bold",
-                color: "white",
+                color: "gray",
                 fontSize: 15,
               }}
             >
@@ -78,12 +98,12 @@ const Header = ({ active }) => {
               marginRight: 20,
             }}
           >
-            <MaterialCommunityIcons name="campfire" size={22} color="white" />
+            <MaterialCommunityIcons name="campfire" size={22} color="gray" />
             <Text
               style={{
                 marginLeft: 8,
                 fontWeight: "bold",
-                color: "white",
+                color: "gray",
                 fontSize: 15,
               }}
             >
@@ -101,13 +121,13 @@ const Header = ({ active }) => {
             <MaterialCommunityIcons
               name="home-analytics"
               size={22}
-              color="white"
+              color="gray"
             />
             <Text
               style={{
                 marginLeft: 8,
                 fontWeight: "bold",
-                color: "white",
+                color: "gray",
                 fontSize: 15,
               }}
             >
@@ -115,8 +135,8 @@ const Header = ({ active }) => {
             </Text>
           </Pressable>
         </ScrollView>
-      </View>
-    </View>
+      )}
+    </>
   );
 };
 
@@ -127,18 +147,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderColor: "#003580",
-    borderWidth: 1,
-    borderRadius: 25,
+    // borderWidth: 1,
+    // borderRadius: 25,
     padding: 8,
     marginRight: 20,
   },
   categoryText: {
     marginLeft: 8,
     fontWeight: "bold",
-    color: "white",
+    color: "gray",
     fontSize: 15,
   },
   activeCategory: {
-    borderColor: "white",
+    borderWidth: 1,
+    borderRadius: 25,
+    borderColor: "#003580",
   },
 });
