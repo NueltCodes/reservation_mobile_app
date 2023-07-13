@@ -7,7 +7,13 @@ export const SavedSlice = createSlice({
   },
   reducers: {
     savedPlaces: (state, action) => {
-      state.booking.push({ ...action.payload });
+      const { timestamp, ...payload } = action.payload;
+      const serializedTimestamp = timestamp.toDate().toISOString(); // Convert Firestore timestamp to ISO string
+
+      state.booking.push({
+        ...payload,
+        timestamp: serializedTimestamp,
+      });
     },
   },
 });

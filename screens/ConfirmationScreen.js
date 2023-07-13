@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { savedPlaces } from "../SavedReducer";
 import { auth, db } from "../firebase";
 import {
+  Timestamp,
   addDoc,
   collection,
   doc,
@@ -32,7 +33,14 @@ const ConfirmationScreen = () => {
   const uid = auth.currentUser.uid;
 
   const confirmBooking = async () => {
-    dispatch(savedPlaces(route.params));
+    const timestamp = Timestamp.fromDate(new Date()); // Create a Firestore timestamp object
+
+    dispatch(
+      savedPlaces({
+        ...route.params,
+        timestamp: timestamp, // Pass the timestamp as a Firestore Timestamp object
+      })
+    );
     setLoading(true);
 
     try {
@@ -67,7 +75,7 @@ const ConfirmationScreen = () => {
         lastName: lastName,
         email: email,
         totalPrice: numberOfDays * property.price,
-        timestamp: serverTimestamp(),
+        timestamp: timestamp, // Pass the Firestore timestamp object
       };
 
       const bookingsCollectionRef = collection(db, "bookings");

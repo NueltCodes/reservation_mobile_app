@@ -13,21 +13,29 @@ const Header = ({ active, category, userName }) => {
     <>
       {category && (
         <View style={{ backgroundColor: "#003580", paddingBottom: 15 }}>
-          <View style={{ paddingHorizontal: 10 }}>
+          <View style={{ paddingHorizontal: 15 }}>
             <View>
-              {userName?.length > 10 ? (
-                <Text
-                  style={{ fontSize: 18, color: "white", paddingBottom: 15 }}
-                >
-                  Welcome, {userName?.slice(0, 10)}
-                  <Text style={{ fontSize: 18 }}>...</Text>
-                </Text>
-              ) : (
-                userName?.name
-              )}
+              <Text style={{ fontSize: 18, color: "white", paddingBottom: 15 }}>
+                Welcome,{" "}
+                {userName && userName.length > 10 ? (
+                  <Text>
+                    {userName.slice(0, 10)}
+                    <Text style={{ fontSize: 18 }}>...</Text>
+                  </Text>
+                ) : (
+                  userName
+                )}
+              </Text>
+
               <View>
                 <Text
-                  style={{ fontSize: 16, color: "#f2f2f0", paddingBottom: 15 }}
+                  style={{
+                    fontSize: 16,
+                    color: "#f2f2f0",
+                    paddingBottom: 0,
+                    paddingTop: 10,
+                    textAlign: "center",
+                  }}
                 >
                   Let's find you a place to relax
                 </Text>

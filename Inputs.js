@@ -25,7 +25,17 @@ export const amenities = [
     description: "Flat screen!",
   },
   {
-    label: "Kitchen essentails",
+    label: "Kitchen essentials",
+    icon: (
+      <MaterialCommunityIcons
+        name="silverware-fork-knife"
+        size={21}
+        color="gray"
+      />
+    ),
+  },
+  {
+    label: "Cooking essentials",
     icon: (
       <MaterialCommunityIcons
         name="silverware-fork-knife"
@@ -39,7 +49,7 @@ export const amenities = [
     icon: <Octicons name="codespaces" size={21} color="gray" />,
   },
   {
-    label: "Washing machine",
+    label: "Washer",
     icon: (
       <MaterialCommunityIcons name="washing-machine" size={21} color="gray" />
     ),
@@ -121,9 +131,29 @@ export const perks = [
     label: "Ocean view",
     icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
   },
+  {
+    label: "Sound system",
+    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+  },
+  {
+    label: "Ethernet connection",
+    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+  },
+  {
+    label: "Indoor fire-place",
+    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+  },
+  {
+    label: "Dish washer",
+    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+  },
+  {
+    label: "Coffee maker",
+    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+  },
 ];
 
-export const safetyGuide = [
+export const safetyGuides = [
   {
     label: "Fire extinguisher",
     icon: <FontAwesome name="fire-extinguisher" size={24} color="gray" />,
@@ -140,6 +170,10 @@ export const safetyGuide = [
   },
   {
     label: "Security dogs",
+    icon: <MaterialCommunityIcons name="dog" size={24} color="gray" />,
+  },
+  {
+    label: "First aid kit",
     icon: <MaterialCommunityIcons name="dog" size={24} color="gray" />,
   },
   {

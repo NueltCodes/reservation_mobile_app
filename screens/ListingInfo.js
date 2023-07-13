@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { amenities, categories, perks } from "../Inputs";
+import { amenities, categories, perks, safetyGuides } from "../Inputs";
 import {
   BottomModal,
   ModalButton,
@@ -104,6 +104,14 @@ const ListingInfo = () => {
     return perks.filter((perk) => property.perks.includes(perk.label));
   }, [property.perks]);
 
+  const matchedSafetyGuide = useMemo(() => {
+    if (!property.safetyGuides) return [];
+
+    return safetyGuides.filter((safety) =>
+      property.safetyGuides.includes(safety.label)
+    );
+  }, [property.safetyGuides]);
+
   const screenWidth = Dimensions.get("window").width;
   const itemWidth = 150;
   const numColumns = Math.floor(screenWidth / itemWidth);
@@ -130,6 +138,16 @@ const ListingInfo = () => {
       (row + 1) * numColumns
     );
     perkData.push(rowData);
+  }
+  const safetyRows = Math.ceil(matchedPerks.length / numColumns);
+
+  const safetyData = [];
+  for (let row = 0; row < safetyRows; row++) {
+    const rowData = matchedSafetyGuide.slice(
+      row * numColumns,
+      (row + 1) * numColumns
+    );
+    safetyData.push(rowData);
   }
 
   const reservations = () => {
@@ -339,6 +357,28 @@ const ListingInfo = () => {
               Unique features
             </Text>
             <Features gridData={perkData} />
+
+            <Text
+              style={{
+                borderColor: "#E0E0E0",
+                borderWidth: 1,
+                height: 1,
+                marginTop: 30,
+              }}
+            />
+
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "500",
+                color: "#0B3A2C",
+                marginTop: 30,
+                textDecorationLine: "underline",
+              }}
+            >
+              Safety guides
+            </Text>
+            <Features gridData={safetyData} />
           </View>
 
           <Text

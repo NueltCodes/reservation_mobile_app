@@ -16,6 +16,7 @@ import {
   limit,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import Card from "../components/Card";
@@ -34,7 +35,7 @@ const HomeScreen = () => {
   const [userName, setUserName] = useState([]);
   const [loading, setLoading] = useState(false);
   const route = useRoute();
-
+  const [topRatedItems, setTopRatedItems] = useState([]);
   const isFocused = useIsFocused(); // This allows the this page to fetch bookings ones the tabScreen is mounted or active
 
   const PopularPlaces = async () => {
@@ -53,24 +54,19 @@ const HomeScreen = () => {
       }
     }
 
-    const colRef = query(
-      collection(db, "Listings"),
-      orderBy("popularityCount", "desc"),
-      limit(5) // Fetch top 5 popular places
+    const colRef = collection(db, "Listings");
+    const queryRef = query(
+      colRef,
+      where("popularityCount", ">=", 5), // Filter by popularityCount >= 5
+      orderBy("popularityCount", "desc") // Order by popularityCount in descending order
     );
-    const docsSnap = await getDocs(colRef);
-    const uniqueItems = [];
 
-    docsSnap.forEach((doc) => {
+    const snapshot = await getDocs(queryRef);
+    const items = [];
+
+    snapshot.forEach((doc) => {
       const data = doc.data();
-
-      // Checking if the item already exists in the uniqueItems array
-      const exists = uniqueItems.some((item) => item.id === data.id); // Assuming the item has a unique identifier 'id'
-
-      // Add the item to uniqueItems array if it doesn't exist
-      if (!exists) {
-        uniqueItems.push(data);
-      }
+      items.push(data);
     });
 
     const latestColRef = query(
@@ -87,11 +83,27 @@ const HomeScreen = () => {
       latestItems.push(data);
     });
 
+    const ratingColRef = query(
+      collection(db, "Listings"),
+      where("rating", "==", 5), // Filter by popularityCount >= 5
+      orderBy("rating", "desc"),
+      limit(5) // Fetch top 5 highest-rated listings
+    );
+    const ratingDocsSnap = await getDocs(ratingColRef);
+    const topRatedItems = [];
+
+    ratingDocsSnap.forEach((doc) => {
+      const data = doc.data();
+
+      topRatedItems.push(data);
+    });
+
     setLoading(false);
 
+    setTopRatedItems(topRatedItems);
     setUserName(userName);
     setLatestItems(latestItems);
-    setItems(uniqueItems);
+    setItems(items);
   };
 
   useEffect(() => {
@@ -202,6 +214,48 @@ const HomeScreen = () => {
             ))}
           </View>
         </ScrollView>
+
+        <Text
+          style={{ marginHorizontal: 20, fontSize: 18, fontWeight: "bold" }}
+        >
+          Top places
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 30,
+              marginVertical: 20,
+              marginHorizontal: 20,
+            }}
+          >
+            {topRatedItems.map((property, id) => (
+              <Card key={id} item={property} HomeStyle={true} />
+            ))}
+          </View>
+        </ScrollView>
+
+        {/* <Text
+          style={{ marginHorizontal: 20, fontSize: 18, fontWeight: "bold" }}
+        >
+          Top places
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 30,
+              marginVertical: 20,
+              marginHorizontal: 20,
+            }}
+          >
+            {topRatedItems.map((property, id) => (
+              <Card key={id} item={property} HomeStyle={true} />
+            ))}
+          </View>
+        </ScrollView> */}
 
         <View
           style={{
