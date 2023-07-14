@@ -38,21 +38,34 @@ const Card = ({ property, item, HomeStyle }) => {
             borderBottomRightRadius: 10,
           }}
         >
-          <Text
+          {/* This below was the old way to cut reduce the text lenghts displayed and adding ... by the end after sliceing those end text out*/}
+          {/* <Text
             style={{
               fontWeight: "bold",
               fontSize: 18,
               width: 250,
             }}
           >
-            {property?.name?.length > 40 || item?.name?.length > 40 ? (
+            {property?.name?.length > 30 || item?.name?.length > 30 ? (
               <Text>
-                {(property?.name || item?.name)?.slice(0, 40)}
+                {(property?.name || item?.name)?.slice(0, 30)}
                 <Text style={{ fontSize: 18 }}>...</Text>
               </Text>
             ) : (
               property?.name || item?.name
             )}
+          </Text> */}
+
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{
+              fontWeight: "bold",
+              fontSize: 18,
+              width: 250,
+            }}
+          >
+            {property?.name || item?.name}
           </Text>
 
           <View style={styles.ratingContainer}>

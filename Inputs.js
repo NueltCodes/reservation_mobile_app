@@ -20,6 +20,11 @@ export const amenities = [
     description: "Free Wifi!",
   },
   {
+    label: "Bathing products",
+    icon: <MaterialIcons name="soap" size={21} color="gray" />,
+    description: "Free Wifi!",
+  },
+  {
     label: "Tv",
     icon: <FontAwesome name="tv" size={21} color="gray" />,
     description: "Flat screen!",
@@ -34,20 +39,7 @@ export const amenities = [
       />
     ),
   },
-  {
-    label: "Cooking essentials",
-    icon: (
-      <MaterialCommunityIcons
-        name="silverware-fork-knife"
-        size={21}
-        color="gray"
-      />
-    ),
-  },
-  {
-    label: "Work space",
-    icon: <Octicons name="codespaces" size={21} color="gray" />,
-  },
+
   {
     label: "Washer",
     icon: (
@@ -87,7 +79,7 @@ export const perks = [
     description: "This property has an hot tub!",
   },
   {
-    label: "Mountain",
+    label: "Mountain View",
     icon: <Foundation name="mountains" size={24} color="gray" />,
     description: "This property has an hot tub!",
   },
@@ -106,7 +98,10 @@ export const perks = [
     label: "Outdoor fire-place",
     icon: <MaterialCommunityIcons name="campfire" size={24} color="gray" />,
   },
-
+  {
+    label: "Work space",
+    icon: <Octicons name="codespaces" size={21} color="gray" />,
+  },
   {
     label: "Ps5",
     icon: <Ionicons name="game-controller-outline" size={24} color="gray" />,
@@ -132,12 +127,26 @@ export const perks = [
     icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
   },
   {
+    label: "Dryer",
+    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+  },
+  {
     label: "Sound system",
     icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
   },
   {
     label: "Ethernet connection",
     icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+  },
+  {
+    label: "Cooking essentials",
+    icon: (
+      <MaterialCommunityIcons
+        name="silverware-fork-knife"
+        size={21}
+        color="gray"
+      />
+    ),
   },
   {
     label: "Indoor fire-place",

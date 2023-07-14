@@ -13,7 +13,7 @@ import { Feather } from "@expo/vector-icons";
 import { TextInput } from "react-native";
 import NoResult from "../assets/no-result-found.json";
 
-const IslandScreen = () => {
+const ModernScreen = () => {
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ const IslandScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: "Tropical Homes",
+      title: "Modern Homes",
       headerTitleStyle: {
         fontSize: 20,
         fontWeight: "bold",
@@ -56,7 +56,7 @@ const IslandScreen = () => {
       const colRef = collection(db, "Listings");
       const queryRef = query(
         colRef,
-        where("category", "==", "Tropical") // Filter by popularityCount >= 5
+        where("category", "==", "Modern") // Filter by popularityCount >= 5
       );
       const docsSnap = await getDocs(queryRef);
       docsSnap.forEach((doc) => {
@@ -130,7 +130,7 @@ const IslandScreen = () => {
         </View>
       </View>
       <View>
-        <Header active={2} />
+        <Header active={5} />
       </View>
       <ScrollView
         vertical
@@ -167,7 +167,7 @@ const IslandScreen = () => {
   );
 };
 
-export default IslandScreen;
+export default ModernScreen;
 
 const styles = StyleSheet.create({
   animation: {

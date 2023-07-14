@@ -72,7 +72,7 @@ const HomeScreen = () => {
     const latestColRef = query(
       collection(db, "Listings"),
       orderBy("timestamp", "desc"),
-      limit(5) // Fetch top 5 latest listings
+      limit(20) // Fetch top 5 latest listings
     );
     const latestDocsSnap = await getDocs(latestColRef);
     const latestItems = [];
@@ -85,9 +85,9 @@ const HomeScreen = () => {
 
     const ratingColRef = query(
       collection(db, "Listings"),
-      where("rating", "==", 5), // Filter by popularityCount >= 5
+      where("rating", ">=", 4), // Filter by popularityCount >= 5
       orderBy("rating", "desc"),
-      limit(5) // Fetch top 5 highest-rated listings
+      limit(20) // Fetch top 5 highest-rated listings
     );
     const ratingDocsSnap = await getDocs(ratingColRef);
     const topRatedItems = [];

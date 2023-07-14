@@ -5,9 +5,23 @@ import { Fontisto } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 const Header = ({ active, category, userName }) => {
   const navigation = useNavigation();
+  const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollViewRef.current && active) {
+      const categoryButtonWidth = 100; // Adjust the width of each category button accordingly
+      const contentOffset = (active - 1) * categoryButtonWidth;
+      scrollViewRef.current.scrollTo({
+        x: contentOffset,
+        animated: true,
+      });
+    }
+  }, [active]);
 
   return (
     <>
@@ -48,6 +62,7 @@ const Header = ({ active, category, userName }) => {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
+          ref={scrollViewRef}
           contentContainerStyle={{
             backgroundColor: !category ? "white" : "#003580",
             flexDirection: "row",
@@ -80,11 +95,11 @@ const Header = ({ active, category, userName }) => {
           </Pressable>
 
           <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginRight: 20,
-            }}
+            //  onPress={() => navigation.navigate("Modern")}
+            style={[
+              styles.categoryButton,
+              active === 3 ? styles.activeCategory : null,
+            ]}
           >
             <FontAwesome name="diamond" size={19} color="gray" />
             <Text
@@ -120,11 +135,11 @@ const Header = ({ active, category, userName }) => {
           </Pressable>
 
           <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginRight: 20,
-            }}
+            onPress={() => navigation.navigate("Modern")}
+            style={[
+              styles.categoryButton,
+              active === 5 ? styles.activeCategory : null,
+            ]}
           >
             <MaterialCommunityIcons
               name="home-analytics"
