@@ -12,6 +12,7 @@ import Loader2 from "../assets/loading2.json";
 import { Feather } from "@expo/vector-icons";
 import { TextInput } from "react-native";
 import NoResult from "../assets/no-result-found.json";
+import NoApartment from "../assets/ufo-noResult-animation.json";
 
 const IslandScreen = () => {
   const navigation = useNavigation();
@@ -54,10 +55,7 @@ const IslandScreen = () => {
 
     const fetchProducts = async () => {
       const colRef = collection(db, "Listings");
-      const queryRef = query(
-        colRef,
-        where("category", "==", "Tropical") // Filter by popularityCount >= 5
-      );
+      const queryRef = query(colRef, where("category", "==", "Tropical"));
       const docsSnap = await getDocs(queryRef);
       docsSnap.forEach((doc) => {
         items.push(doc.data());
@@ -79,7 +77,9 @@ const IslandScreen = () => {
 
   const renderProperties = () => {
     const filteredProperties = filterProperties();
-    if (filteredProperties.length === 0) {
+    const isLuxuryCategoryEmpty = filteredProperties.length === 0 && !loading;
+
+    if (filteredProperties.length === 0 && !loading && input.trim() !== "") {
       return (
         <View style={styles.noResultContainer}>
           <Lottie
@@ -89,10 +89,26 @@ const IslandScreen = () => {
             style={{ width: "100%", height: 300 }}
           />
           <Text style={styles.noResultText}>
-            No apartment matching this name found.
+            No apartments matching the search input "{input}" found.
           </Text>
           <Text style={styles.suggestionText}>
             Please try searching with a different name.
+          </Text>
+        </View>
+      );
+    }
+
+    if (filteredProperties.length === 0 && isLuxuryCategoryEmpty) {
+      return (
+        <View style={styles.noResultContainer}>
+          <Lottie
+            source={NoApartment}
+            autoPlay
+            loop
+            style={{ width: "100%", height: 300 }}
+          />
+          <Text style={styles.noResultText}>
+            No Tropical apartments currently available.
           </Text>
         </View>
       );
@@ -184,6 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
+    lineHeight: 30,
   },
   suggestionText: {
     fontSize: 16,

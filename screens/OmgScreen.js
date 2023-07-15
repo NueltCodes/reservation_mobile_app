@@ -14,7 +14,7 @@ import { TextInput } from "react-native";
 import NoResult from "../assets/no-result-found.json";
 import NoApartment from "../assets/ufo-noResult-animation.json";
 
-const ModernScreen = () => {
+const OmgScreen = () => {
   const navigation = useNavigation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const ModernScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: "Modern Homes",
+      title: "OMG Homes",
       headerTitleStyle: {
         fontSize: 20,
         fontWeight: "bold",
@@ -55,7 +55,7 @@ const ModernScreen = () => {
 
     const fetchProducts = async () => {
       const colRef = collection(db, "Listings");
-      const queryRef = query(colRef, where("category", "==", "Modern"));
+      const queryRef = query(colRef, where("category", "==", "Omg"));
       const docsSnap = await getDocs(queryRef);
       docsSnap.forEach((doc) => {
         items.push(doc.data());
@@ -108,7 +108,7 @@ const ModernScreen = () => {
             style={{ width: "100%", height: 300 }}
           />
           <Text style={styles.noResultText}>
-            No Modern apartments currently available.
+            No Unique apartments currently available.
           </Text>
         </View>
       );
@@ -146,7 +146,7 @@ const ModernScreen = () => {
         </View>
       </View>
       <View>
-        <Header active={5} />
+        <Header active={6} />
       </View>
       <ScrollView
         vertical
@@ -183,7 +183,7 @@ const ModernScreen = () => {
   );
 };
 
-export default ModernScreen;
+export default OmgScreen;
 
 const styles = StyleSheet.create({
   animation: {

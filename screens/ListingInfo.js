@@ -295,7 +295,11 @@ const ListingInfo = () => {
               <Text style={styles.options}>max guest {property.maxGuest}</Text>
             </View>
           </View>
-
+          <View style={{ paddingTop: 20 }}>
+            <Text style={{ fontWeight: "bold", color: "red", fontSize: 18 }}>
+              $ {property.price} per night
+            </Text>
+          </View>
           <View style={{ marginTop: 30 }}>
             <View
               style={{
@@ -425,7 +429,7 @@ const ListingInfo = () => {
                 size={24}
                 color="gray"
               />
-              <Text style={{ fontSize: 17 }}>
+              <Text style={{ fontSize: 16 }}>
                 Check-in after {property.checkIn}
               </Text>
             </View>
@@ -435,14 +439,14 @@ const ListingInfo = () => {
                 size={24}
                 color="gray"
               />
-              <Text style={{ fontSize: 17 }}>
+              <Text style={{ fontSize: 16 }}>
                 Check-out before {property.checkOut}
               </Text>
             </View>
             <View style={styles.rules}>
               <MaterialIcons name="pets" size={24} color="gray" />
 
-              <Text style={{ fontSize: 17 }}>
+              <Text style={{ fontSize: 16 }}>
                 {property.pets === "No" ? "No pets allowed" : "Pets allowed"}
               </Text>
             </View>
@@ -452,7 +456,7 @@ const ListingInfo = () => {
                 size={24}
                 color="gray"
               />
-              <Text style={{ fontSize: 17 }}>
+              <Text style={{ fontSize: 16 }}>
                 {property.smoking === "No"
                   ? "No smoking allowed"
                   : "Smoking allowed but carefully and neatly done"}
@@ -464,7 +468,7 @@ const ListingInfo = () => {
                 size={24}
                 color="gray"
               />
-              <Text style={{ fontSize: 17 }}>
+              <Text style={{ fontSize: 16 }}>
                 {property.party === "No"
                   ? "No party / event allowed"
                   : "Small party / event allowed but with an extra fee"}
@@ -477,7 +481,7 @@ const ListingInfo = () => {
               marginTop: 30,
             }}
           >
-            <Text style={{ fontSize: 18, color: "gray", fontWeight: "bold" }}>
+            <Text style={{ fontSize: 16, color: "gray", fontWeight: "bold" }}>
               Make your reservations below:
             </Text>
           </View>
@@ -549,9 +553,9 @@ const ListingInfo = () => {
           />
 
           <View style={{ paddingVertical: 10 }}>
-            <Text style={{ fontSize: 17, lineHeight: 30 }}>
+            <Text style={{ fontSize: 16, lineHeight: 30 }}>
               State your numbers and category below.
-              <Text style={{ fontSize: 17, color: "red" }}>Note</Text> the
+              <Text style={{ fontSize: 16, color: "red" }}>Note</Text> the
               maximum guest for this place is ({property.maxGuest}) guest max!
             </Text>
           </View>

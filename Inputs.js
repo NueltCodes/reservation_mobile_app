@@ -206,13 +206,22 @@ export const categories = [
     icon: <FontAwesome name="diamond" size={19} color="gray" />,
   },
   {
+    label: "Luxury",
+    icon: <FontAwesome name="diamond" size={19} color="gray" />,
+  },
+  {
     label: "Camp Homes",
     icon: <MaterialCommunityIcons name="campfire" size={22} color="gray" />,
   },
+
   {
     label: "Modern",
     icon: (
       <MaterialCommunityIcons name="home-analytics" size={22} color="gray" />
     ),
+  },
+  {
+    label: "Omg Homes",
+    icon: <MaterialCommunityIcons name="campfire" size={22} color="gray" />,
   },
 ];

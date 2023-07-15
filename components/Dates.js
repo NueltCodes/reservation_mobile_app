@@ -73,6 +73,7 @@ const Dates = ({
                 backgroundColor: "#080516",
                 textHeaderColor: "#469ab6",
                 textDefaultColor: "#FFFFFF",
+                textFontSize: 17,
                 selectedTextColor: "#FFF",
                 mainColor: "#469ab6",
                 textSecondaryColor: "#FFFFFF",
@@ -108,6 +109,7 @@ const Dates = ({
                 textDefaultColor: "#FFFFFF",
                 selectedTextColor: "#FFF",
                 mainColor: "#469ab6",
+                textFontSize: 17,
                 textSecondaryColor: "#FFFFFF",
                 borderColor: "rgba(122, 146, 165, 0.1)",
               }}
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
-    padding: 20,
+    padding: 10,
     width: "90%",
     shadowColor: "#000",
     shadowOffset: {

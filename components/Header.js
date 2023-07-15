@@ -79,7 +79,7 @@ const Header = ({ active, category, userName }) => {
               active === 1 ? styles.activeCategory : null,
             ]}
           >
-            <Ionicons name="bed-outline" size={20} color="gray" />
+            <Ionicons name="bed-outline" size={25} color="gray" />
             <Text style={styles.categoryText}>Stays</Text>
           </Pressable>
 
@@ -95,7 +95,7 @@ const Header = ({ active, category, userName }) => {
           </Pressable>
 
           <Pressable
-            //  onPress={() => navigation.navigate("Modern")}
+            onPress={() => navigation.navigate("Luxury")}
             style={[
               styles.categoryButton,
               active === 3 ? styles.activeCategory : null,
@@ -115,13 +115,13 @@ const Header = ({ active, category, userName }) => {
           </Pressable>
 
           <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginRight: 20,
-            }}
+            onPress={() => navigation.navigate("Camp")}
+            style={[
+              styles.categoryButton,
+              active === 4 ? styles.activeCategory : null,
+            ]}
           >
-            <MaterialCommunityIcons name="campfire" size={22} color="gray" />
+            <MaterialCommunityIcons name="campfire" size={25} color="gray" />
             <Text
               style={{
                 marginLeft: 8,
@@ -143,7 +143,7 @@ const Header = ({ active, category, userName }) => {
           >
             <MaterialCommunityIcons
               name="home-analytics"
-              size={22}
+              size={24}
               color="gray"
             />
             <Text
@@ -155,6 +155,25 @@ const Header = ({ active, category, userName }) => {
               }}
             >
               Modern
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate("Omg")}
+            style={[
+              styles.categoryButton,
+              active === 6 ? styles.activeCategory : null,
+            ]}
+          >
+            <MaterialCommunityIcons name="ufo-outline" size={25} color="gray" />
+            <Text
+              style={{
+                marginLeft: 8,
+                fontWeight: "bold",
+                color: "gray",
+                fontSize: 15,
+              }}
+            >
+              OMG
             </Text>
           </Pressable>
         </ScrollView>

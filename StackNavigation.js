@@ -23,6 +23,9 @@ import IslandScreen from "./screens/IslandScreen";
 import ListingInfo from "./screens/ListingInfo";
 import SuccessPage from "./screens/SuccessPage";
 import ModernScreen from "./screens/ModernScreen";
+import LuxuryScreen from "./screens/LuxuryScreen";
+import CampScreen from "./screens/CampScreen";
+import OmgScreen from "./screens/OmgScreen";
 
 const StackNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -122,8 +125,23 @@ const StackNavigation = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="Luxury"
+          component={LuxuryScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Camp"
+          component={CampScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Modern"
           component={ModernScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Omg"
+          component={OmgScreen}
           options={{ headerShown: false }}
         />
 

@@ -304,6 +304,9 @@ const ConfirmationScreen = () => {
                 gap: 8,
               }}
             >
+              <Text style={{ fontSize: 19, fontWeight: "bold" }}>
+                Per night: ${property.price}
+              </Text>
               <Text
                 style={{
                   color: "red",
@@ -311,9 +314,6 @@ const ConfirmationScreen = () => {
                 }}
               >
                 {getNumberOfDays()} night
-              </Text>
-              <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-                Per night: ${property.price}
               </Text>
             </View>
             <Text
