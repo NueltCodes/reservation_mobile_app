@@ -128,11 +128,13 @@ export const perks = [
   },
   {
     label: "Dryer",
-    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+    icon: <MaterialCommunityIcons name="tumble-dryer" size={24} color="gray" />,
   },
   {
     label: "Sound system",
-    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+    icon: (
+      <MaterialCommunityIcons name="speaker-wireless" size={24} color="gray" />
+    ),
   },
   {
     label: "Ethernet connection",
@@ -140,6 +142,7 @@ export const perks = [
   },
   {
     label: "Cooking essentials",
+    description: "Pots and pans, oil, salt and pepper",
     icon: (
       <MaterialCommunityIcons
         name="silverware-fork-knife"
@@ -154,11 +157,17 @@ export const perks = [
   },
   {
     label: "Dish washer",
-    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+    icon: <MaterialCommunityIcons name="dishwasher" size={24} color="gray" />,
   },
   {
     label: "Coffee maker",
-    icon: <MaterialCommunityIcons name="water-polo" size={24} color="gray" />,
+    icon: (
+      <MaterialCommunityIcons
+        name="coffee-maker-outline"
+        size={24}
+        color="gray"
+      />
+    ),
   },
 ];
 
@@ -183,7 +192,7 @@ export const safetyGuides = [
   },
   {
     label: "First aid kit",
-    icon: <MaterialCommunityIcons name="dog" size={24} color="gray" />,
+    icon: <Foundation name="first-aid" size={24} color="gray" />,
   },
   {
     label: "Smoke alarm",
@@ -206,10 +215,6 @@ export const categories = [
     icon: <FontAwesome name="diamond" size={19} color="gray" />,
   },
   {
-    label: "Luxury",
-    icon: <FontAwesome name="diamond" size={19} color="gray" />,
-  },
-  {
     label: "Camp Homes",
     icon: <MaterialCommunityIcons name="campfire" size={22} color="gray" />,
   },
@@ -221,7 +226,7 @@ export const categories = [
     ),
   },
   {
-    label: "Omg Homes",
-    icon: <MaterialCommunityIcons name="campfire" size={22} color="gray" />,
+    label: "Omg",
+    icon: <MaterialCommunityIcons name="ufo-outline" size={22} color="gray" />,
   },
 ];

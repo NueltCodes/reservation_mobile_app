@@ -18,16 +18,27 @@ const Features = ({ gridData }) => {
               }}
             >
               {amenity.icon}
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "500",
-                  marginLeft: 5,
-                  color: "gray",
-                }}
-              >
-                {amenity.label}
-              </Text>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "500",
+                    marginLeft: 5,
+                    color: "gray",
+                  }}
+                >
+                  {amenity.label}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "500",
+                    color: "gray",
+                  }}
+                >
+                  {amenity.description}
+                </Text>
+              </View>
             </View>
           ))}
         </View>
