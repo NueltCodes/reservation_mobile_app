@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   },
   reserveText: {
     marginTop: 15,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   formContainer: {
@@ -311,10 +311,9 @@ const styles = StyleSheet.create({
   },
   resetPasswordButton: {
     marginTop: 0,
-    width: 185,
   },
   resetPasswordText: {
-    fontSize: 18,
+    fontSize: 14,
     color: "gray",
   },
   loginButton: {
@@ -338,7 +337,7 @@ const styles = StyleSheet.create({
   signupButtonText: {
     textAlign: "center",
     color: "gray",
-    fontSize: 17,
+    fontSize: 14,
   },
 });
 

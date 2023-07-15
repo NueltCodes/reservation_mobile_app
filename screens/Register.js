@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   reserveText: {
     textAlign: "center",
     marginTop: 15,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   form: {

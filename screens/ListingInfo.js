@@ -234,15 +234,6 @@ const ListingInfo = () => {
                 {property.country}
               </Text>
             </View>
-            <View style={styles.ratingContainer}>
-              <Ionicons
-                name="star-sharp"
-                size={18}
-                color="#0B3A2C"
-                style={styles.starIcon}
-              />
-              <Text style={{ fontSize: 15 }}>{property.rating}</Text>
-            </View>
             {matchedCategories.map((category, index) => (
               <View
                 key={index}
@@ -295,8 +286,24 @@ const ListingInfo = () => {
               <Text style={styles.options}>max guest {property.maxGuest}</Text>
             </View>
           </View>
-          <View style={{ paddingTop: 20 }}>
-            <Text style={{ fontWeight: "bold", color: "red", fontSize: 18 }}>
+          <View
+            style={{
+              paddingTop: 20,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 20,
+            }}
+          >
+            <View style={styles.ratingContainer}>
+              <Ionicons
+                name="star-sharp"
+                size={18}
+                color="#FFC72C"
+                style={styles.starIcon}
+              />
+              <Text style={{ fontSize: 15 }}>{property.rating}</Text>
+            </View>
+            <Text style={{ fontWeight: "bold", color: "gray", fontSize: 18 }}>
               $ {property.price} per night
             </Text>
           </View>
@@ -319,7 +326,7 @@ const ListingInfo = () => {
 
             <Text
               style={{
-                borderColor: "#E0E0E0",
+                borderColor: "#FFC72C",
                 borderWidth: 1,
                 height: 1,
                 marginTop: 20,
@@ -342,7 +349,7 @@ const ListingInfo = () => {
 
             <Text
               style={{
-                borderColor: "#E0E0E0",
+                borderColor: "#FFC72C",
                 borderWidth: 1,
                 height: 1,
                 marginTop: 30,
@@ -364,7 +371,7 @@ const ListingInfo = () => {
 
             <Text
               style={{
-                borderColor: "#E0E0E0",
+                borderColor: "#FFC72C",
                 borderWidth: 1,
                 height: 1,
                 marginTop: 30,
@@ -387,7 +394,7 @@ const ListingInfo = () => {
 
           <Text
             style={{
-              borderColor: "#E0E0E0",
+              borderColor: "#FFC72C",
               borderWidth: 1,
               height: 1,
               marginTop: 30,
