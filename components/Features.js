@@ -29,15 +29,17 @@ const Features = ({ gridData }) => {
                 >
                   {amenity.label}
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    color: "gray",
-                  }}
-                >
-                  {amenity.description}
-                </Text>
+                {amenity.description && (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: "500",
+                      color: "gray",
+                    }}
+                  >
+                    {amenity.description}
+                  </Text>
+                )}
               </View>
             </View>
           ))}

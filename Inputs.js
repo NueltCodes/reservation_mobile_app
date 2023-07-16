@@ -12,22 +12,18 @@ export const amenities = [
   {
     label: "Wifi",
     icon: <AntDesign name="wifi" size={21} color="gray" />,
-    description: "Free Wifi!",
   },
   {
     label: "Cleaning product",
     icon: <MaterialIcons name="soap" size={21} color="gray" />,
-    description: "Free Wifi!",
   },
   {
     label: "Bathing products",
     icon: <MaterialIcons name="soap" size={21} color="gray" />,
-    description: "Free Wifi!",
   },
   {
     label: "Tv",
     icon: <FontAwesome name="tv" size={21} color="gray" />,
-    description: "Flat screen!",
   },
   {
     label: "Kitchen essentials",
@@ -76,17 +72,14 @@ export const perks = [
   {
     label: "Hot tub",
     icon: <MaterialCommunityIcons name="hot-tub" size={24} color="gray" />,
-    description: "This property has an hot tub!",
   },
   {
-    label: "Mountain View",
+    label: "Mountain view",
     icon: <Foundation name="mountains" size={24} color="gray" />,
-    description: "This property has an hot tub!",
   },
   {
     label: "Patio",
     icon: <MaterialCommunityIcons name="balcony" size={24} color="gray" />,
-    description: "This property is has a balcony/courtyard!",
   },
   {
     label: "BBQ grill",
@@ -105,7 +98,6 @@ export const perks = [
   {
     label: "Ps5",
     icon: <Ionicons name="game-controller-outline" size={24} color="gray" />,
-    description: "indoor fire place!",
   },
 
   {
@@ -142,7 +134,7 @@ export const perks = [
   },
   {
     label: "Cooking essentials",
-    description: "Pots and pans, oil, salt and pepper",
+    description: "pans, oil, salt and pepper",
     icon: (
       <MaterialCommunityIcons
         name="silverware-fork-knife"
@@ -175,6 +167,10 @@ export const safetyGuides = [
   {
     label: "Fire extinguisher",
     icon: <FontAwesome name="fire-extinguisher" size={24} color="gray" />,
+  },
+  {
+    label: "Guard",
+    icon: <MaterialCommunityIcons name="security" size={24} color="gray" />,
   },
   {
     label: "Carbon monoxide alaram",

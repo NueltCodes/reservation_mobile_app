@@ -433,37 +433,37 @@ const ListingInfo = () => {
             <View style={styles.rules}>
               <MaterialCommunityIcons
                 name="timer-outline"
-                size={24}
+                size={22}
                 color="gray"
               />
-              <Text style={{ fontSize: 16 }}>
+              <Text style={{ fontSize: 15 }}>
                 Check-in after {property.checkIn}
               </Text>
             </View>
             <View style={styles.rules}>
               <MaterialCommunityIcons
                 name="timer-off-outline"
-                size={24}
+                size={22}
                 color="gray"
               />
-              <Text style={{ fontSize: 16 }}>
+              <Text style={{ fontSize: 15 }}>
                 Check-out before {property.checkOut}
               </Text>
             </View>
             <View style={styles.rules}>
-              <MaterialIcons name="pets" size={24} color="gray" />
+              <MaterialIcons name="pets" size={22} color="gray" />
 
-              <Text style={{ fontSize: 16 }}>
+              <Text style={{ fontSize: 15 }}>
                 {property.pets === "No" ? "No pets allowed" : "Pets allowed"}
               </Text>
             </View>
             <View style={styles.rules}>
               <MaterialCommunityIcons
                 name="smoking-off"
-                size={24}
+                size={22}
                 color="gray"
               />
-              <Text style={{ fontSize: 16 }}>
+              <Text style={{ fontSize: 15 }}>
                 {property.smoking === "No"
                   ? "No smoking allowed"
                   : "Smoking allowed but carefully and neatly done"}
@@ -472,10 +472,10 @@ const ListingInfo = () => {
             <View style={styles.rules}>
               <MaterialCommunityIcons
                 name="party-popper"
-                size={24}
+                size={22}
                 color="gray"
               />
-              <Text style={{ fontSize: 16 }}>
+              <Text style={{ fontSize: 15 }}>
                 {property.party === "No"
                   ? "No party / event allowed"
                   : "Small party / event allowed but with an extra fee"}
