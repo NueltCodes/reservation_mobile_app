@@ -18,6 +18,7 @@ import { Zocial } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
 
 const ProfileScreen = () => {
   const isFocused = useIsFocused();
@@ -46,8 +47,11 @@ const ProfileScreen = () => {
     }
   }, [isFocused]);
 
+  const storage = getStorage();
+
   const uploadImageToFirebase = async (imageUri) => {
     try {
+      const user = auth.currentUser;
       const imageRef = ref(storage, `profileImages/${user.uid}.jpg`);
       await uploadBytes(imageRef, imageUri);
       console.log("Image uploaded successfully");

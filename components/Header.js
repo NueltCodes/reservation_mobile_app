@@ -29,7 +29,7 @@ const Header = ({ active, category, userName }) => {
         <View style={{ backgroundColor: "#003580", paddingBottom: 15 }}>
           <View style={{ paddingHorizontal: 15 }}>
             <View>
-              <Text style={{ fontSize: 18, color: "white", paddingBottom: 15 }}>
+              <Text style={{ fontSize: 25, color: "white", paddingBottom: 15 }}>
                 Welcome,{" "}
                 {userName && userName.length > 10 ? (
                   <Text>
