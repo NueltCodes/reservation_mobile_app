@@ -8,8 +8,18 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { auth, db } from "../firebase";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { auth, db, storage } from "../firebase";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";
 import { Alert } from "react-native";
@@ -18,7 +28,13 @@ import { Zocial } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { getStorage, ref, uploadBytes, deleteObject } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  deleteObject,
+  getDownloadURL,
+} from "firebase/storage";
+import Toast from "react-native-root-toast";
 
 const ProfileScreen = () => {
   const isFocused = useIsFocused();
@@ -47,17 +63,117 @@ const ProfileScreen = () => {
     }
   }, [isFocused]);
 
-  const storage = getStorage();
-
-  const uploadImageToFirebase = async (imageUri) => {
+  // const storage = getStorage();
+  console.log(image);
+  const uploadImageToFirebase = async (uri) => {
     try {
-      const user = auth.currentUser;
-      const imageRef = ref(storage, `profileImages/${user.uid}.jpg`);
-      await uploadBytes(imageRef, imageUri);
-      console.log("Image uploaded successfully");
-      // You can update the user's profile document in Firestore to store the image URL or any other relevant information
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function(e) {
+          console.log(e);
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+
+      const storageRef = ref(storage, `Images/image-${Date.now()}`);
+      const uploadTask = uploadBytes(storageRef, blob);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Handle progress updates if needed
+        },
+        (error) => {
+          console.log("Error uploading image:", error);
+          Toast.show("Error uploading image, please try again", {
+            duration: Toast.durations.SHORT,
+            position: 100,
+            shadow: true,
+            animation: true,
+          });
+        },
+        async () => {
+          // Upload completed successfully
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log("Image uploaded successfully");
+            // Save the download URL to the user's profile or perform any other necessary operations
+            const user = auth.currentUser;
+
+            if (user) {
+              const userId = user.uid;
+              const userDocRef = doc(db, "users", userId);
+
+              // Check if the user document exists
+              const userDocSnapshot = await getDoc(userDocRef);
+
+              if (userDocSnapshot.exists()) {
+                // Update the profileImageUrl field in the user's document
+                await updateDoc(userDocRef, {
+                  profileImageUrl: downloadURL,
+                });
+
+                Toast.show("Image uploaded successfully", {
+                  duration: Toast.durations.SHORT,
+                  position: 100,
+                  shadow: true,
+                  animation: true,
+                });
+              } else {
+                // Create a new user document with the profileImageUrl field
+                await setDoc(userDocRef, {
+                  name: userInfo.name,
+                  email: user.email,
+                  phone: userInfo.phone,
+                  profileImageUrl: downloadURL,
+                });
+
+                Toast.show("Image uploaded successfully", {
+                  duration: Toast.durations.SHORT,
+                  position: 100,
+                  shadow: true,
+                  animation: true,
+                });
+              }
+            } else {
+              console.log("User not logged in");
+              Toast.show("User not logged in", {
+                duration: Toast.durations.SHORT,
+                position: 100,
+                shadow: true,
+                animation: true,
+              });
+            }
+
+            Toast.show("Image uploaded successfully", {
+              duration: Toast.durations.SHORT,
+              position: 100,
+              shadow: true,
+              animation: true,
+            });
+          } catch (error) {
+            console.log("Error getting download URL:", error);
+            // Handle the error here, e.g., display an error message to the user
+            Toast.show("Error getting download URL, please try again", {
+              duration: Toast.durations.SHORT,
+              position: 100,
+              shadow: true,
+              animation: true,
+            });
+          } finally {
+            blob.close();
+          }
+        }
+      );
     } catch (error) {
       console.log("Error uploading image:", error);
+      // Handle the error here, e.g., display an error message to the user
     }
   };
 
@@ -84,17 +200,19 @@ const ProfileScreen = () => {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      uploadImageToFirebase(result.assets[0].uri);
-      setInterval(() => {
-        setLoading(false);
-      }, 2000);
+      try {
+        const selectedAsset = result.assets[0];
+        await uploadImageToFirebase(selectedAsset.uri);
+        setImage(selectedAsset.uri);
+      } catch (error) {
+        console.log("Error uploading image:", error);
+        // Handle the error here, e.g., display an error message to the user
+      }
     } else {
       setImage(null);
-      setInterval(() => {
-        setLoading(false);
-      }, 2000);
     }
+
+    setLoading(false);
   };
 
   const handleLogout = () => {

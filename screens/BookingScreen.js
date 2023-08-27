@@ -85,6 +85,7 @@ const BookingScreen = () => {
       querySnapshot.forEach((doc) => {
         deleteDoc(doc.ref);
       });
+      fetchBookings();
 
       Toast.show("Booking deleted successfully.", {
         duration: Toast.durations.LONG,

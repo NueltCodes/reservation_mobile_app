@@ -41,7 +41,7 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log("user details", user);
+          // console.log("user details", user);
         })
         .catch((error) => {
           setLoading(false);
