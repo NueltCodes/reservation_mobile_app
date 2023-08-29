@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Button,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -337,7 +338,10 @@ const ProfileScreen = () => {
               marginVertical: 10,
             }}
           />
-          <View style={styles.bodyBookings}>
+          <Pressable
+            style={styles.bodyBookings}
+            onPress={() => navigation.navigate("Bookings")}
+          >
             <View style={styles.body}>
               <Entypo name="book" size={22} color="gray" />
               <Text style={styles.phoneNumber}>View your bookings</Text>
@@ -348,7 +352,7 @@ const ProfileScreen = () => {
               color="gray"
               style={{ marginRight: 30 }}
             />
-          </View>
+          </Pressable>
           <Text
             style={{
               borderColor: "#FFC72C",

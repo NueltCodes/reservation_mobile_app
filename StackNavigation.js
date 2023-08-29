@@ -49,7 +49,7 @@ const StackNavigation = () => {
           }}
         />
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Saved"
           component={SavedScreen}
           options={{
@@ -62,7 +62,7 @@ const StackNavigation = () => {
                 <AntDesign name="hearto" size={24} color="black" />
               ),
           }}
-        />
+        /> */}
 
         <Tab.Screen
           name="Bookings"

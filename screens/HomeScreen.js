@@ -23,9 +23,6 @@ import Card from "../components/Card";
 import Loader2 from "../assets/loading2.json";
 import Lottie from "lottie-react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Fontisto } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -36,7 +33,7 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(false);
   const route = useRoute();
   const [topRatedItems, setTopRatedItems] = useState([]);
-  const isFocused = useIsFocused(); // This allows the this page to fetch bookings ones the tabScreen is mounted or active
+  const isFocused = useIsFocused(); // This allows the this page to fetch data ones the Hometab is mounted or active
 
   const PopularPlaces = async () => {
     setLoading(true);
@@ -72,7 +69,7 @@ const HomeScreen = () => {
     const latestColRef = query(
       collection(db, "Listings"),
       orderBy("timestamp", "desc"),
-      limit(50) // Fetch top 5 latest listings
+      limit(50) // Fetch top 50 latest listings
     );
     const latestDocsSnap = await getDocs(latestColRef);
     const latestItems = [];
@@ -85,9 +82,9 @@ const HomeScreen = () => {
 
     const ratingColRef = query(
       collection(db, "Listings"),
-      where("rating", ">=", 4), // Filter by popularityCount >= 5
+      where("rating", ">=", 3), // Filter by popularityCount >= 5
       orderBy("rating", "desc"),
-      limit(5) // Fetch top 5 highest-rated listings
+      limit(20) // Fetch top 20 highest-rated listings
     );
     const ratingDocsSnap = await getDocs(ratingColRef);
     const topRatedItems = [];
@@ -197,7 +194,7 @@ const HomeScreen = () => {
         <Text
           style={{ marginHorizontal: 20, fontSize: 18, fontWeight: "bold" }}
         >
-          Popular places
+          Trending places
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View
@@ -218,7 +215,7 @@ const HomeScreen = () => {
         <Text
           style={{ marginHorizontal: 20, fontSize: 18, fontWeight: "bold" }}
         >
-          Top places
+          Top rated
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View
